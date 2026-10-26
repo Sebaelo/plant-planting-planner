@@ -39,12 +39,22 @@ export function getAllPlants(req, res) {
 }
 
 export function addPlant(req, res) {
-  const error = validatePlant(req.body ?? {});
+  const { plantName, amountToPlant, monthToPlant, plantingAdvice } =
+    req.body ?? {};
+
+  const amount = Number(amountToPlant);
+  const month = Number(monthToPlant);
+
+  const error = validatePlant({
+    plantName,
+    amountToPlant: amount,
+    monthToPlant: month,
+    plantingAdvice,
+  });
+
   if (error) {
     return res.status(400).json({ error });
   }
-
-  const { plantName, amountToPlant, monthToPlant, plantingAdvice } = req.body;
 
   try {
     const addedPlant = db
@@ -54,7 +64,7 @@ export function addPlant(req, res) {
     VALUES (?, ?, ?, ?)
     RETURNING * `,
       )
-      .get(plantName, amountToPlant, monthToPlant, plantingAdvice);
+      .get(plantName, amount, month, plantingAdvice);
 
     return res.status(201).json({
       message: "Planteringsplaneringen lades till.",
@@ -72,8 +82,8 @@ export function addPlant(req, res) {
 export function deletePlant(req, res) {
   const plantId = Number(req.params.id);
 
-  if (!Number.isInteger(plantId)) {
-    return res.status(404).json({ error: "Ogiltigt ID" });
+  if (!Number.isInteger(plantId) || plantId <= 0) {
+    return res.status(400).json({ error: "Ogiltigt ID" });
   }
 
   try {
