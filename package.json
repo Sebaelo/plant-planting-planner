@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch server/server.js"
+    "backend": "node --watch server/server.js",
+    "frontend": "browser-sync start --proxy 'localhost:3000' --files 'client'",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
   },
   "keywords": [],
   "type": "module",
@@ -16,5 +18,9 @@
   },
   "allowScripts": {
     "better-sqlite3@13.0.3": true
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.4",
+    "concurrently": "^10.0.6"
   }
 }
