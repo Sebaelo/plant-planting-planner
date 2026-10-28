@@ -19,7 +19,7 @@ svg {
 }
 
 input,
-button,
+#btn-submit,
 textarea,
 select {
   font: inherit;
@@ -65,7 +65,7 @@ a {
 .form-field input,
 select,
 textarea,
-button {
+#btn-submit {
   border: 3px solid #67787c;
   padding: 0.7rem;
   border-radius: 0.3rem;
@@ -81,20 +81,36 @@ button {
   font-size: 1.2rem;
 }
 
-button {
+#btn-submit {
   background-color: white;
   padding: 1rem;
   font-size: 1.2rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
-button:hover {
+#btn-submit:hover {
   cursor: pointer;
   background-color: #f5f5f5;
 }
 
-button:active {
+#btn-submit:active {
   background-color: #e5e5e5;
+}
+
+.table-section {
+  padding: 0.5rem;
+}
+
+.table-section table {
+  border-collapse: collapse;
+  width: 100%;
+  border: 2px solid black;
+}
+
+th,
+td {
+  border: 2px solid black;
+  padding: 0.5rem;
 }
 
 @media (min-width: 640px) {
@@ -102,7 +118,36 @@ button:active {
     grid-template-columns: 1fr 1fr;
   }
 
+  .form-field input,
+  select,
+  textarea,
+  #btn-submit {
+    border: 2px solid #67787c;
+    padding: 0.4rem;
+  }
+
   .form-field-wide {
     grid-column: 1 / -1;
+  }
+
+  .form-field label {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  #month {
+    font-size: 1rem;
+  }
+
+  #btn-submit {
+    grid-column: 2;
+    padding: 0.5rem 2rem;
+    font-size: 1rem;
+    justify-self: end;
+  }
+
+  #submit-message {
+    padding: 0.5rem;
+    text-align: right;
   }
 }

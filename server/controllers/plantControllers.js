@@ -67,7 +67,7 @@ export function addPlant(req, res) {
       .get(plantName, amount, month, plantingAdvice);
 
     return res.status(201).json({
-      message: "Planteringsplaneringen lades till.",
+      message: "Planteringsplaneringen lades till!",
       addedPlant,
     });
   } catch (err) {
