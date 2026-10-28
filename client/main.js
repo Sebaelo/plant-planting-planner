@@ -29,7 +29,20 @@ function addPlantToTable(plant) {
   const monthToPlant = document.createElement("td");
   monthToPlant.textContent = months[plant.month_to_plant - 1];
 
-  row.append(plantName, amountToPlant, monthToPlant);
+  const deleteBtn = document.createElement("button");
+  deleteBtn.type = "button";
+  deleteBtn.classList.add("btn-delete");
+
+  const deleteIcon = document.createElement("img");
+  deleteIcon.src = "./assets/icons/delete.svg";
+  deleteIcon.alt = `Ta bort ${plant.plant_name}`;
+
+  deleteBtn.appendChild(deleteIcon);
+
+  const deletePlant = document.createElement("td");
+  deletePlant.appendChild(deleteBtn);
+
+  row.append(plantName, amountToPlant, monthToPlant, deletePlant);
 
   tableBody.appendChild(row);
 }

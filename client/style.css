@@ -113,6 +113,21 @@ td {
   padding: 0.5rem;
 }
 
+.icons-cell {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.btn-delete {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.btn-delete img {
+  max-inline-size: none;
+}
+
 @media (min-width: 640px) {
   #plant-form {
     grid-template-columns: 1fr 1fr;
