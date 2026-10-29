@@ -161,7 +161,7 @@ td {
     justify-self: end;
   }
 
-  #submit-message {
+  #display-messages {
     padding: 0.5rem;
     text-align: right;
   }

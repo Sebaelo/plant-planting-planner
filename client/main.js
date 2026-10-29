@@ -1,4 +1,5 @@
 const plantForm = document.getElementById("plant-form");
+const displayMessages = document.getElementById("display-messages");
 
 const months = [
   "januari",
@@ -15,7 +16,25 @@ const months = [
   "december",
 ];
 
-function addPlantToTable(plant) {
+async function deletePlant(id, row) {
+  try {
+    const response = await fetch(`/api/plants/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      const delError = await response.json();
+      throw new Error(delError.error);
+    }
+
+    row.remove();
+  } catch (err) {
+    console.error(err);
+    displayMessages.textContent = err.message;
+  }
+}
+
+function createPlantRow(plant) {
   const tableBody = document.getElementById("table-body");
 
   const row = document.createElement("tr");
@@ -39,10 +58,12 @@ function addPlantToTable(plant) {
 
   deleteBtn.appendChild(deleteIcon);
 
-  const deletePlant = document.createElement("td");
-  deletePlant.appendChild(deleteBtn);
+  deleteBtn.addEventListener("click", () => deletePlant(plant.id, row));
 
-  row.append(plantName, amountToPlant, monthToPlant, deletePlant);
+  const delPlant = document.createElement("td");
+  delPlant.appendChild(deleteBtn);
+
+  row.append(plantName, amountToPlant, monthToPlant, delPlant);
 
   tableBody.appendChild(row);
 }
@@ -58,7 +79,7 @@ async function renderPlants() {
     const plants = await response.json();
 
     plants.forEach((plant) => {
-      addPlantToTable(plant);
+      createPlantRow(plant);
     });
   } catch (err) {
     console.error(err);
@@ -67,11 +88,16 @@ async function renderPlants() {
 
 async function postForm(event) {
   event.preventDefault();
-  const submitMessage = document.getElementById("submit-message");
 
   const formData = new FormData(plantForm);
-
   const plant = Object.fromEntries(formData);
+
+  const amount = Number(plant.amountToPlant);
+
+  if (!Number.isInteger(amount) || amount <= 0) {
+    displayMessages.textContent = "Mängd måste vara ett positivt heltal.";
+    return;
+  }
 
   try {
     const response = await fetch("/api/plants", {
@@ -86,16 +112,16 @@ async function postForm(event) {
       throw new Error(data.error);
     }
 
-    submitMessage.textContent = data.message;
+    displayMessages.textContent = data.message;
     setTimeout(() => {
-      submitMessage.textContent = "";
+      displayMessages.textContent = "";
     }, 2000);
 
-    addPlantToTable(data.addedPlant);
+    createPlantRow(data.addedPlant);
     plantForm.reset();
   } catch (err) {
     console.error(err);
-    submitMessage.textContent = err.message;
+    displayMessages.textContent = err.message;
   }
 }
 
