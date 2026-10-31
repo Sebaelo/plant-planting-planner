@@ -128,7 +128,7 @@ test_addPlant() {
         '{
             "plantName": "Tomat",
             "amountToPlant": 2,
-            "monthToPlant": "13",
+            "monthToPlant": "10",
             "plantingAdvice": "Sending string for monthToPlant"
         }'
     post_plant "All valid inputs!" \

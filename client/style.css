@@ -1,1 +1,240 @@
-/* style.css */
+:root {
+  --color-bg: #0f1117;
+  --color-surface: #181b25;
+  --color-border: #2a2f2e;
+
+  --color-text: #c8f1de;
+
+  --color-accent: #34d399;
+
+  --color-submit-hover: #5edcae;
+  --color-submit-active: #26ae7c;
+
+  --color-table-header: #12141c;
+  --color-table-hover: #232734;
+
+  --color-delete-bg: #3b1a1f;
+  --color-delete-hover: #4f2027;
+  --color-delete-active: #2c1115;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+  padding: 1rem;
+}
+
+img,
+svg {
+  display: block;
+  max-inline-size: 100%;
+}
+
+input,
+#btn-submit,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.no-arrows::-webkit-outer-spin-button,
+.no-arrows::-webkit-inner-spin-button {
+  appearance: none;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+h1 {
+  margin-bottom: 5rem;
+  text-align: center;
+}
+
+#plant-form {
+  display: grid;
+  gap: 2rem;
+  max-width: 2250px;
+  margin-inline: auto;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1.2rem;
+  border: 3px solid var(--color-border);
+  border-radius: 0.3rem;
+  padding: 0.5rem;
+}
+
+.form-field label {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+#btn-submit {
+  background-color: var(--color-accent);
+  color: var(--color-surface);
+  border: none;
+  border-radius: 0.3rem;
+  padding: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+#btn-submit:hover {
+  cursor: pointer;
+  background-color: var(--color-submit-hover);
+}
+
+#btn-submit:active {
+  background-color: var(--color-submit-active);
+}
+
+.table-section {
+  margin: 2rem auto;
+  max-width: 2250px;
+  border: 3px solid var(--color-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.table-section table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--color-surface);
+}
+
+th,
+td {
+  border: 3px solid var(--color-border);
+  border-inline: none;
+  padding: 0.5rem;
+}
+
+th {
+  background-color: var(--color-table-header);
+  text-align: left;
+  font-size: 1.3rem;
+  border-top: none;
+}
+
+td {
+  font-size: 1.2rem;
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  cursor: pointer;
+  background-color: var(--color-table-hover);
+}
+
+.btn-delete {
+  display: block;
+  margin-inline: auto;
+  border: none;
+  border-radius: 0.3rem;
+  background-color: var(--color-delete-bg);
+  padding: 0.3rem;
+  cursor: pointer;
+}
+
+.btn-delete:hover {
+  background-color: var(--color-delete-hover);
+}
+
+.btn-delete:active {
+  background-color: var(--color-delete-active);
+}
+
+#display-messages {
+  padding: 0.5rem;
+  text-align: right;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+@media (min-width: 640px) {
+  #plant-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    border-width: 2px;
+    font-size: 1rem;
+    padding: 0.4rem;
+  }
+
+  .form-field-wide {
+    grid-column: 1 / -1;
+  }
+
+  .form-field label {
+    font-size: 1rem;
+  }
+
+  #btn-submit {
+    grid-column: 2;
+    padding: 0.5rem 2rem;
+    font-size: 1rem;
+    justify-self: end;
+  }
+
+  .table-section,
+  th,
+  td {
+    border-width: 2px;
+  }
+
+  th {
+    font-size: 1.1rem;
+  }
+
+  td {
+    font-size: 1rem;
+  }
+}
