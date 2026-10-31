@@ -50,10 +50,11 @@ function createPlantRow(plant) {
 
   const deleteBtn = document.createElement("button");
   deleteBtn.type = "button";
+  deleteBtn.title = `Ta bort ${plant.plant_name.toLowerCase()}`;
   deleteBtn.classList.add("btn-delete");
 
   const deleteIcon = document.createElement("img");
-  deleteIcon.src = "./assets/icons/delete.svg";
+  deleteIcon.src = "/assets/icons/delete.svg";
   deleteIcon.alt = `Ta bort ${plant.plant_name}`;
 
   deleteBtn.appendChild(deleteIcon);
