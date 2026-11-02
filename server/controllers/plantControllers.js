@@ -48,7 +48,7 @@ export function getAllPlants(req, res) {
     console.error(err);
     return res.status(500).json({
       error:
-        "Något gick fel, kunde inte hämta informationen. Vänligen försök igen...",
+        "Något gick fel, kunde inte hämta växterna. Vänligen försök igen...",
     });
   }
 }
@@ -122,7 +122,7 @@ export function deletePlant(req, res) {
   const plantId = Number(req.params.id);
 
   if (!Number.isInteger(plantId) || plantId <= 0) {
-    return res.status(400).json({ error: "Ogiltigt ID" });
+    return res.status(400).json({ error: "Ogiltigt ID." });
   }
 
   try {
