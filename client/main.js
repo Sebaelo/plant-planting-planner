@@ -1,5 +1,8 @@
 const plantForm = document.getElementById("plant-form");
+const tableBody = document.getElementById("table-body");
 const displayMessages = document.getElementById("display-messages");
+
+let plants = [];
 
 const months = [
   "januari",
@@ -16,27 +19,7 @@ const months = [
   "december",
 ];
 
-async function deletePlant(id, row) {
-  try {
-    const response = await fetch(`/api/plants/${id}`, {
-      method: "DELETE",
-    });
-
-    if (!response.ok) {
-      const delError = await response.json();
-      throw new Error(delError.error);
-    }
-
-    row.remove();
-  } catch (err) {
-    console.error(err);
-    displayMessages.textContent = err.message;
-  }
-}
-
 function createPlantRow(plant) {
-  const tableBody = document.getElementById("table-body");
-
   const row = document.createElement("tr");
 
   const plantName = document.createElement("td");
@@ -44,6 +27,9 @@ function createPlantRow(plant) {
 
   const amountToPlant = document.createElement("td");
   amountToPlant.textContent = `${plant.amount_to_plant} st`;
+
+  const plantCategory = document.createElement("td");
+  plantCategory.textContent = plant.category;
 
   const monthToPlant = document.createElement("td");
   monthToPlant.textContent = months[plant.month_to_plant - 1];
@@ -59,17 +45,17 @@ function createPlantRow(plant) {
 
   deleteBtn.appendChild(deleteIcon);
 
-  deleteBtn.addEventListener("click", () => deletePlant(plant.id, row));
+  deleteBtn.addEventListener("click", () => deletePlant(plant.id));
 
   const delPlant = document.createElement("td");
   delPlant.appendChild(deleteBtn);
 
-  row.append(plantName, amountToPlant, monthToPlant, delPlant);
+  row.append(plantName, amountToPlant, plantCategory, monthToPlant, delPlant);
 
   tableBody.appendChild(row);
 }
 
-async function renderPlants() {
+async function fetchPlants() {
   try {
     const response = await fetch("/api/plants");
 
@@ -77,14 +63,18 @@ async function renderPlants() {
       throw new Error(`Response status: ${response.status}`);
     }
 
-    const plants = await response.json();
-
-    plants.forEach((plant) => {
-      createPlantRow(plant);
-    });
+    plants = await response.json();
+    renderTable();
   } catch (err) {
     console.error(err);
   }
+}
+
+function renderTable() {
+  tableBody.textContent = "";
+  plants.forEach((plant) => {
+    createPlantRow(plant);
+  });
 }
 
 async function postForm(event) {
@@ -113,13 +103,15 @@ async function postForm(event) {
       throw new Error(data.error);
     }
 
+    plants.push(data.addedPlant);
+    renderTable();
+
+    plantForm.reset();
+
     displayMessages.textContent = data.message;
     setTimeout(() => {
       displayMessages.textContent = "";
     }, 2000);
-
-    createPlantRow(data.addedPlant);
-    plantForm.reset();
   } catch (err) {
     console.error(err);
     displayMessages.textContent = err.message;
@@ -128,4 +120,23 @@ async function postForm(event) {
 
 plantForm.addEventListener("submit", postForm);
 
-renderPlants();
+async function deletePlant(id) {
+  try {
+    const response = await fetch(`/api/plants/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      const delError = await response.json();
+      throw new Error(delError.error);
+    }
+
+    plants = plants.filter((plant) => plant.id !== id);
+    renderTable();
+  } catch (err) {
+    console.error(err);
+    displayMessages.textContent = err.message;
+  }
+}
+
+fetchPlants();
