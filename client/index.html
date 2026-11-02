@@ -46,6 +46,16 @@
         </select>
       </div>
 
+      <div class="form-field">
+        <label for="category">Kategori</label>
+        <select id="category" name="plantCategory" required>
+          <option value="">Välj kategori</option>
+          <option value="1">Ört</option>
+          <option value="2">Grönsak</option>
+          <option value="3">Blomma</option>
+        </select>
+      </div>
+
       <div class="form-field form-field-wide">
         <label for="advice">Skötselråd</label>
         <textarea
@@ -67,6 +77,7 @@
           <tr>
             <th>Växtnamn</th>
             <th>Mängd</th>
+            <th>Kategori</th>
             <th>Månad</th>
             <th class="icons-cell"></th>
           </tr>
