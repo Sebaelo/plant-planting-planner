@@ -4,6 +4,7 @@ function validatePlant({
   plantName,
   amountToPlant,
   monthToPlant,
+  plantCategory,
   plantingAdvice,
 }) {
   if (typeof plantName !== "string" || plantName.trim() === "") {
@@ -14,6 +15,9 @@ function validatePlant({
   }
   if (!Number.isInteger(amountToPlant) || amountToPlant <= 0) {
     return "Mängd måste vara ett positivt heltal.";
+  }
+  if (!Number.isInteger(plantCategory) || plantCategory <= 0) {
+    return "Vänligen välj en kategori.";
   }
   if (
     !Number.isInteger(monthToPlant) ||
@@ -27,7 +31,11 @@ function validatePlant({
 
 export function getAllPlants(req, res) {
   try {
-    const plants = db.prepare("SELECT * FROM plants").all();
+    const plants = db
+      .prepare(
+        "SELECT * FROM plants JOIN categories ON plants.category_id = categories.id",
+      )
+      .all();
     return res.status(200).json(plants);
   } catch (err) {
     console.error(err);
@@ -39,16 +47,23 @@ export function getAllPlants(req, res) {
 }
 
 export function addPlant(req, res) {
-  const { plantName, amountToPlant, monthToPlant, plantingAdvice } =
-    req.body ?? {};
+  const {
+    plantName,
+    amountToPlant,
+    monthToPlant,
+    plantCategory,
+    plantingAdvice,
+  } = req.body ?? {};
 
   const amount = Number(amountToPlant);
   const month = Number(monthToPlant);
+  const category = Number(plantCategory);
 
   const error = validatePlant({
     plantName,
     amountToPlant: amount,
     monthToPlant: month,
+    plantCategory: category,
     plantingAdvice,
   });
 
@@ -57,14 +72,23 @@ export function addPlant(req, res) {
   }
 
   try {
+    const existingCategory = db
+      .prepare("SELECT id FROM categories WHERE id = ?")
+      .get(category);
+    if (!existingCategory) {
+      return res.status(400).json({
+        error: "Den valda kategorin finns inte.",
+      });
+    }
+
     const addedPlant = db
       .prepare(
         `
-    INSERT INTO plants ( plant_name, amount_to_plant, month_to_plant, planting_advice )
-    VALUES (?, ?, ?, ?)
+    INSERT INTO plants ( plant_name, amount_to_plant, month_to_plant, planting_advice, category_id )
+    VALUES (?, ?, ?, ?, ?)
     RETURNING * `,
       )
-      .get(plantName, amount, month, plantingAdvice);
+      .get(plantName, amount, month, plantingAdvice, category);
 
     return res.status(201).json({
       message: "Planteringsplaneringen lades till!",
