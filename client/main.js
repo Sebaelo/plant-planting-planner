@@ -19,6 +19,30 @@ const months = [
   "december",
 ];
 
+async function categoryDropdown() {
+  const categorySelect = document.getElementById("category");
+
+  try {
+    const response = await fetch("/api/categories");
+
+    const categories = await response.json();
+
+    if (!response.ok) {
+      throw new Error(categories.error);
+    }
+
+    categories.forEach((category) => {
+      const categoryOptions = document.createElement("option");
+      categoryOptions.value = category.id;
+      categoryOptions.textContent = category.category;
+      categorySelect.append(categoryOptions);
+    });
+  } catch (err) {
+    console.error(err);
+    displayMessages.textContent = err.message;
+  }
+}
+
 function createPlantRow(plant) {
   const row = document.createElement("tr");
 
@@ -59,14 +83,17 @@ async function fetchPlants() {
   try {
     const response = await fetch("/api/plants");
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
+      throw new Error(data.error);
     }
 
-    plants = await response.json();
+    plants = data;
     renderTable();
   } catch (err) {
     console.error(err);
+    displayMessages.textContent = err.message;
   }
 }
 
@@ -139,4 +166,5 @@ async function deletePlant(id) {
   }
 }
 
+categoryDropdown();
 fetchPlants();

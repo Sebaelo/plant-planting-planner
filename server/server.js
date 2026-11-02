@@ -13,7 +13,7 @@ app.use(morgan(":method :url :status :response-time ms - :date"));
 app.use(express.static(path.join(import.meta.dirname, "../client/")));
 
 app.use("/api/plants", plantRoutes);
-app.use("/api/category", categoryRoutes);
+app.use("/api/categories", categoryRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

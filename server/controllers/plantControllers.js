@@ -122,7 +122,7 @@ export function deletePlant(req, res) {
   const plantId = Number(req.params.id);
 
   if (!Number.isInteger(plantId) || plantId <= 0) {
-    return res.status(400).json({ error: "Ogiltigt ID" });
+    return res.status(400).json({ error: "Ogiltigt ID." });
   }
 
   try {
