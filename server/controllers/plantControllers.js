@@ -48,7 +48,7 @@ export function getAllPlants(req, res) {
     console.error(err);
     return res.status(500).json({
       error:
-        "Något gick fel, kunde inte hämta informationen. Vänligen försök igen...",
+        "Något gick fel, kunde inte hämta växterna. Vänligen försök igen...",
     });
   }
 }
