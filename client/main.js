@@ -98,7 +98,7 @@ async function fetchPlants() {
 }
 
 function renderTable() {
-  tableBody.textContent = "";
+  tableBody.replaceChildren();
   plants.forEach((plant) => {
     createPlantRow(plant);
   });
