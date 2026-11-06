@@ -1,6 +1,7 @@
 const plantForm = document.getElementById("plant-form");
 const tableBody = document.getElementById("table-body");
 const displayMessages = document.getElementById("display-messages");
+const searchInput = document.getElementById("search-plants");
 
 let plants = [];
 
@@ -165,6 +166,28 @@ async function deletePlant(id) {
     displayMessages.textContent = err.message;
   }
 }
+
+async function searchPlants(query) {
+  try {
+    const response = await fetch(`/api/plants/search?q=${query}`);
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error);
+    }
+
+    plants = data;
+    renderTable();
+  } catch (err) {
+    console.error(err);
+    displayMessages.textContent = err.message;
+  }
+}
+
+searchInput.addEventListener("input", (event) => {
+  searchPlants(event.target.value);
+});
 
 categoryDropdown();
 fetchPlants();
