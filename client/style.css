@@ -90,6 +90,7 @@ h1 {
   gap: 2rem;
   max-width: 2250px;
   margin-inline: auto;
+  width: 100%;
 }
 
 .form-field {
@@ -133,8 +134,42 @@ h1 {
   background-color: var(--color-submit-active);
 }
 
+.search-wrapper {
+  display: flex;
+  flex-direction: column-reverse;
+  padding: 2rem 0;
+  gap: 2rem;
+  width: 100%;
+  max-width: 2250px;
+  margin-inline: auto;
+}
+
+.search-icon-container {
+  position: relative;
+}
+
+.search-icon-container input {
+  padding: 0.5rem 0.5rem 0.5rem 3rem;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1.2rem;
+  border: 3px solid var(--color-border);
+  border-radius: 0.3rem;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.7rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+}
+
 .table-section {
   margin: 2rem auto;
+  width: 100%;
   max-width: 2250px;
   border: 3px solid var(--color-border);
   border-radius: 0.5rem;
@@ -224,6 +259,28 @@ tbody tr:hover {
     justify-self: end;
   }
 
+  .search-wrapper {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .search-icon-container {
+    flex: 1;
+    max-width: 700px;
+  }
+
+  .search-icon-container input {
+    padding-left: 2.5rem;
+    border-width: 2px;
+    font-size: 1rem;
+  }
+
+  .search-icon {
+    left: 0.5rem;
+    height: 24px;
+    width: 24px;
+  }
   .table-section,
   th,
   td {

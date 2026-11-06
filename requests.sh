@@ -31,6 +31,7 @@ test_addPlant() {
             "plantName": "",
             "amountToPlant": 2,
             "monthToPlant": 3,
+            "plantCategory": 1,
             "plantingAdvice": "Sending empty plantName"
         }'
     post_plant "Sending whitespaces for plantName" \
@@ -38,6 +39,7 @@ test_addPlant() {
             "plantName": "  ",
             "amountToPlant": 2,
             "monthToPlant": 3,
+            "plantCategory": 1,
             "plantingAdvice": "Sending whitespaces for plantName"
         }'
     post_plant "Sending number for plantName" \
@@ -45,6 +47,7 @@ test_addPlant() {
             "plantName": 0,
             "amountToPlant": 2,
             "monthToPlant": 3,
+            "plantCategory": 1,
             "plantingAdvice": "Sending number for plantName"
         }'
     post_plant "Sending empty for plantingAdvice" \
@@ -52,6 +55,7 @@ test_addPlant() {
             "plantName": "Sending empty for plantingAdvice",
             "amountToPlant": 2,
             "monthToPlant": 3,
+            "plantCategory": 1,
             "plantingAdvice": ""
         }'
     post_plant "Sending whitespaces for plantingAdvice" \
@@ -59,6 +63,7 @@ test_addPlant() {
             "plantName": "Sending whitespaces for plantingAdvice",
             "amountToPlant": 2,
             "monthToPlant": 3,
+            "plantCategory": 1,
             "plantingAdvice": "   "
         }'
     post_plant "Sending number for plantingAdvice" \
@@ -66,6 +71,7 @@ test_addPlant() {
             "plantName": "Sending number for plantingAdvice",
             "amountToPlant": 2,
             "monthToPlant": 3,
+            "plantCategory": 1,
             "plantingAdvice": 1
         }'
     post_plant "Sending negative number for amountToPlant" \
@@ -73,6 +79,7 @@ test_addPlant() {
             "plantName": "Tomat",
             "amountToPlant": -2,
             "monthToPlant": 3,
+            "plantCategory": 1,
             "plantingAdvice": "Sending negative number for amountToPlant"
         }'
     post_plant "Sending 0 for amountToPlant" \
@@ -80,6 +87,7 @@ test_addPlant() {
             "plantName": "Tomat",
             "amountToPlant": 0,
             "monthToPlant": 3,
+            "plantCategory": 1,
             "plantingAdvice": "Sending 0 for amountToPlant"
         }'
     post_plant "Sending float for amountToPlant" \
@@ -87,6 +95,7 @@ test_addPlant() {
             "plantName": "Tomat",
             "amountToPlant": 1.5,
             "monthToPlant": 3,
+            "plantCategory": 1,
             "plantingAdvice": "Sending float for amountToPlant"
         }'
     post_plant "Sending string for amountToPlant" \
@@ -94,6 +103,7 @@ test_addPlant() {
             "plantName": "Tomat",
             "amountToPlant": "2",
             "monthToPlant": 3,
+            "plantCategory": 1,
             "plantingAdvice": "Sending string for amountToPlant"
         }'
     post_plant "Sending negative number for monthToPlant" \
@@ -101,6 +111,7 @@ test_addPlant() {
             "plantName": "Tomat",
             "amountToPlant": 2,
             "monthToPlant": -1,
+            "plantCategory": 1,
             "plantingAdvice": "Sending negative number for monthToPlant"
         }'
     post_plant "Sending 0 for monthToPlant" \
@@ -108,6 +119,7 @@ test_addPlant() {
             "plantName": "Tomat",
             "amountToPlant": 2,
             "monthToPlant": 0,
+            "plantCategory": 1,
             "plantingAdvice": "Sending 0 for monthToPlant"
         }'
     post_plant "Sending float for monthToPlant" \
@@ -115,6 +127,7 @@ test_addPlant() {
             "plantName": "Tomat",
             "amountToPlant": 2,
             "monthToPlant": 2.5,
+            "plantCategory": 1,
             "plantingAdvice": "Sending float for monthToPlant"
         }'
     post_plant "Sending number above 12 for monthToPlant" \
@@ -122,6 +135,7 @@ test_addPlant() {
             "plantName": "Tomat",
             "amountToPlant": 2,
             "monthToPlant": 13,
+            "plantCategory": 1,
             "plantingAdvice": "Sending number above 12 for monthToPlant"
         }'
     post_plant "Sending string for monthToPlant" \
@@ -129,6 +143,7 @@ test_addPlant() {
             "plantName": "Tomat",
             "amountToPlant": 2,
             "monthToPlant": "10",
+            "plantCategory": 1,
             "plantingAdvice": "Sending string for monthToPlant"
         }'
     post_plant "All valid inputs!" \
@@ -136,6 +151,7 @@ test_addPlant() {
             "plantName": "Tomat",
             "amountToPlant": 2,
             "monthToPlant": 2,
+            "plantCategory": 1,
             "plantingAdvice": "Signora, i pomoDORIIII"
         }'
 }
