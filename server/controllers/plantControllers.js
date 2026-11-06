@@ -1,23 +1,22 @@
 import db from "../db/db.js";
+import {
+  getAllPlantsModel,
+  addPlantModel,
+  deletePlantModel,
+} from "../models/plantModels.js";
 
-function validatePlant({
+function validatePlant(
   plantName,
   amountToPlant,
   monthToPlant,
   plantCategory,
   plantingAdvice,
-}) {
-  if (typeof plantName !== "string" || plantName.trim() === "") {
+) {
+  if (typeof plantName !== "string" || !plantName.trim()) {
     return "Växtnamn måste vara ifyllt.";
-  }
-  if (typeof plantingAdvice !== "string" || plantingAdvice.trim() === "") {
-    return "Skötselråd måste vara ifyllt.";
   }
   if (!Number.isInteger(amountToPlant) || amountToPlant <= 0) {
     return "Mängd måste vara ett positivt heltal.";
-  }
-  if (!Number.isInteger(plantCategory) || plantCategory <= 0) {
-    return "Vänligen välj en kategori.";
   }
   if (
     !Number.isInteger(monthToPlant) ||
@@ -26,23 +25,18 @@ function validatePlant({
   ) {
     return "Vänligen välj en månad.";
   }
+  if (!Number.isInteger(plantCategory) || plantCategory <= 0) {
+    return "Vänligen välj en kategori.";
+  }
+  if (typeof plantingAdvice !== "string" || !plantingAdvice.trim()) {
+    return "Skötselråd måste vara ifyllt.";
+  }
   return null;
 }
 
 export function getAllPlants(req, res) {
   try {
-    const plants = db
-      .prepare(
-        `SELECT plants.id,
-              plants.plant_name,
-              plants.amount_to_plant,
-              plants.month_to_plant,
-              plants.planting_advice,
-              categories.category
-          FROM plants
-          JOIN categories ON plants.category_id = categories.id`,
-      )
-      .all();
+    const plants = getAllPlantsModel();
     return res.status(200).json(plants);
   } catch (err) {
     console.error(err);
@@ -66,13 +60,13 @@ export function addPlant(req, res) {
   const month = Number(monthToPlant);
   const category = Number(plantCategory);
 
-  const error = validatePlant({
+  const error = validatePlant(
     plantName,
-    amountToPlant: amount,
-    monthToPlant: month,
-    plantCategory: category,
+    amount,
+    month,
+    category,
     plantingAdvice,
-  });
+  );
 
   if (error) {
     return res.status(400).json({ error });
@@ -89,21 +83,13 @@ export function addPlant(req, res) {
       });
     }
 
-    const addedPlant = db
-      .prepare(
-        `
-        INSERT INTO plants ( plant_name, amount_to_plant, month_to_plant, planting_advice, category_id )
-        VALUES (?, ?, ?, ?, ?)
-        RETURNING
-          id,
-          plant_name,
-          amount_to_plant,
-          month_to_plant,
-          planting_advice,
-          (SELECT category FROM categories WHERE categories.id = plants.category_id) AS category
-        `,
-      )
-      .get(plantName, amount, month, plantingAdvice, category);
+    const addedPlant = addPlantModel(
+      plantName,
+      amount,
+      month,
+      plantingAdvice,
+      category,
+    );
 
     return res.status(201).json({
       message: "Planteringsplaneringen lades till!",
@@ -126,9 +112,7 @@ export function deletePlant(req, res) {
   }
 
   try {
-    const deletedPlant = db
-      .prepare("DELETE FROM plants WHERE id = ?")
-      .run(plantId);
+    const deletedPlant = deletePlantModel(plantId);
 
     if (deletedPlant.changes === 0) {
       return res.status(404).json({
@@ -142,6 +126,25 @@ export function deletePlant(req, res) {
     return res.status(500).json({
       error:
         "Något gick fel, kunde inte ta bort inlägget. Vänligen försök igen...",
+    });
+  }
+}
+
+export function searchPlants(req, res) {
+  try {
+    const query = req.query.q?.toLowerCase().trim() ?? "";
+    const plants = getAllPlantsModel();
+
+    const filteredPlants = plants.filter((plant) => {
+      return plant.plant_name.toLowerCase().includes(query);
+    });
+
+    return res.status(200).json(filteredPlants);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      error:
+        "Något gick fel, kunde inte genomföra sökningen. Vänligen försök igen...",
     });
   }
 }
