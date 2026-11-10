@@ -7,15 +7,27 @@
 
   --color-accent: #34d399;
 
-  --color-submit-hover: #5edcae;
-  --color-submit-active: #26ae7c;
-
   --color-table-header: #12141c;
   --color-table-hover: #232734;
 
-  --color-delete-bg: #3b1a1f;
-  --color-delete-hover: #4f2027;
-  --color-delete-active: #2c1115;
+  --color-btn-submit-hover: #5edcae;
+  --color-btn-submit-active: #26ae7c;
+
+  /* Variation 1 */
+  /* --color-btn-close: #323850; */
+
+  /* --color-btn-close-hover: #414867; */
+  /* --color-btn-close-active: #2d3248; */
+
+  /* Variation 2, a bit brighter */
+  --color-btn-close: #363d60;
+
+  --color-btn-close-hover: #434c77;
+  --color-btn-close-active: #313756;
+
+  --color-btn-delete: #3b1a1f;
+  --color-btn-delete-hover: #4f2027;
+  --color-btn-delete-active: #2c1115;
 }
 
 *,
@@ -67,6 +79,10 @@ a {
   color: inherit;
 }
 
+button {
+  transition: all 0.15s ease-in-out;
+}
+
 .no-arrows::-webkit-outer-spin-button,
 .no-arrows::-webkit-inner-spin-button {
   appearance: none;
@@ -75,7 +91,8 @@ a {
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
-button:focus-visible {
+button:focus-visible,
+.plant-modal:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
@@ -127,11 +144,11 @@ h1 {
 
 #btn-submit:hover {
   cursor: pointer;
-  background-color: var(--color-submit-hover);
+  background-color: var(--color-btn-submit-hover);
 }
 
 #btn-submit:active {
-  background-color: var(--color-submit-active);
+  background-color: var(--color-btn-submit-active);
 }
 
 .search-wrapper {
@@ -204,6 +221,7 @@ td {
 tbody tr:hover {
   cursor: pointer;
   background-color: var(--color-table-hover);
+  transition: background-color 0.2s ease-in-out;
 }
 
 .btn-delete {
@@ -211,17 +229,17 @@ tbody tr:hover {
   margin-inline: auto;
   border: none;
   border-radius: 0.3rem;
-  background-color: var(--color-delete-bg);
+  background-color: var(--color-btn-delete);
   padding: 0.3rem;
   cursor: pointer;
 }
 
 .btn-delete:hover {
-  background-color: var(--color-delete-hover);
+  background-color: var(--color-btn-delete-hover);
 }
 
 .btn-delete:active {
-  background-color: var(--color-delete-active);
+  background-color: var(--color-btn-delete-active);
 }
 
 #display-messages {
@@ -229,6 +247,73 @@ tbody tr:hover {
   text-align: right;
   font-size: 1.2rem;
   font-weight: 600;
+}
+
+.plant-modal::backdrop {
+  backdrop-filter: blur(0.5rem);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.plant-modal {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  width: 35rem;
+  margin: auto;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 3px solid var(--color-border);
+}
+
+.plant-modal h2 {
+  font-size: 2.2rem;
+  padding-bottom: 1rem;
+}
+
+.plant-details-row {
+  display: flex;
+  padding: 0.5rem 0;
+}
+
+.plant-details-row dt {
+  font-weight: bold;
+  width: 7rem;
+}
+
+.advice-section h3 {
+  font-weight: bold;
+  padding-top: 0.5rem;
+}
+
+.advice-section p {
+  padding-block: 0.3rem 2rem;
+}
+
+.plant-details-row dt,
+.plant-details-row dd,
+.advice-section h3,
+.advice-section p {
+  font-size: 1.2rem;
+}
+
+.btn-close {
+  background-color: var(--color-btn-close);
+  color: var(--color-text);
+  border: none;
+  border-radius: 0.3rem;
+  padding: 0.7rem 2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  display: block;
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.btn-close:hover {
+  background-color: var(--color-btn-close-hover);
+}
+
+.btn-close:active {
+  background-color: var(--color-btn-close-active);
 }
 
 @media (min-width: 640px) {
@@ -293,5 +378,33 @@ tbody tr:hover {
 
   td {
     font-size: 1rem;
+  }
+
+  .plant-modal {
+    border-width: 2px;
+  }
+
+  .plant-modal h2 {
+    font-size: 2rem;
+  }
+
+  .plant-details-row dt,
+  .plant-details-row dd,
+  .advice-section h3,
+  .advice-section p {
+    font-size: 1.1rem;
+  }
+
+  .btn-close {
+    padding: 0.7rem 1.5rem;
+    font-size: 1.1rem;
+  }
+
+  .btn-close:hover {
+    background-color: var(--color-btn-close-hover);
+  }
+
+  .btn-close:active {
+    background-color: var(--color-btn-close-active);
   }
 }

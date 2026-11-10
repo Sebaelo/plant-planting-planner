@@ -2,6 +2,7 @@ const plantForm = document.getElementById("plant-form");
 const tableBody = document.getElementById("table-body");
 const displayMessages = document.getElementById("display-messages");
 const searchInput = document.getElementById("search-plants");
+const modal = document.querySelector("dialog");
 
 let plants = [];
 
@@ -19,6 +20,10 @@ const months = [
   "november",
   "december",
 ];
+
+function displayMonth(monthNumber) {
+  return months[monthNumber - 1];
+}
 
 async function categoryDropdown() {
   const categorySelect = document.getElementById("category");
@@ -57,7 +62,7 @@ function createPlantRow(plant) {
   plantCategory.textContent = plant.category;
 
   const monthToPlant = document.createElement("td");
-  monthToPlant.textContent = months[plant.month_to_plant - 1];
+  monthToPlant.textContent = displayMonth(plant.month_to_plant);
 
   const deleteBtn = document.createElement("button");
   deleteBtn.type = "button";
@@ -70,10 +75,17 @@ function createPlantRow(plant) {
 
   deleteBtn.appendChild(deleteIcon);
 
-  deleteBtn.addEventListener("click", () => deletePlant(plant.id));
+  deleteBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    deletePlant(plant.id);
+  });
 
   const delPlant = document.createElement("td");
   delPlant.appendChild(deleteBtn);
+
+  row.addEventListener("click", () => {
+    plantDetailsModal(plant);
+  });
 
   row.append(plantName, amountToPlant, plantCategory, monthToPlant, delPlant);
 
@@ -188,6 +200,64 @@ async function searchPlants(query) {
 searchInput.addEventListener("input", (event) => {
   searchPlants(event.target.value);
 });
+
+function createDetailRow(label, value) {
+  const detailsRow = document.createElement("div");
+  detailsRow.classList.add("plant-details-row");
+
+  const detailsLabel = document.createElement("dt");
+  detailsLabel.textContent = label;
+
+  const detailsValue = document.createElement("dd");
+  detailsValue.textContent = value;
+
+  detailsRow.append(detailsLabel, detailsValue);
+
+  return detailsRow;
+}
+
+function plantDetailsModal(plant) {
+  modal.replaceChildren();
+
+  modal.showModal();
+
+  const modalTitle = document.createElement("h2");
+  modalTitle.textContent = `${plant.plant_name}`;
+
+  const modalDetails = document.createElement("dl");
+  modalDetails.classList.add("plant-details");
+
+  const amountDetails = createDetailRow("Mängd", `${plant.amount_to_plant} st`);
+
+  const monthDetails = createDetailRow(
+    "Månad",
+    displayMonth(plant.month_to_plant),
+  );
+
+  const categoryDetails = createDetailRow("Kategori", plant.category);
+
+  modalDetails.append(amountDetails, monthDetails, categoryDetails);
+
+  const adviceSection = document.createElement("section");
+  adviceSection.classList.add("advice-section");
+
+  const adviceLabel = document.createElement("h3");
+  adviceLabel.textContent = "Skötselråd";
+
+  const adviceContent = document.createElement("p");
+  adviceContent.textContent = `${plant.planting_advice}`;
+
+  adviceSection.append(adviceLabel, adviceContent);
+
+  const closeBtn = document.createElement("button");
+  closeBtn.type = "button";
+  closeBtn.textContent = "Stäng";
+  closeBtn.classList.add("btn-close");
+
+  closeBtn.addEventListener("click", () => modal.close());
+
+  modal.append(modalTitle, modalDetails, adviceSection, closeBtn);
+}
 
 categoryDropdown();
 fetchPlants();
