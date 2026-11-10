@@ -53,7 +53,7 @@ svg {
 }
 
 input,
-#btn-submit,
+button,
 textarea,
 select {
   font: inherit;
@@ -80,7 +80,7 @@ a {
 }
 
 button {
-  transition: all 0.15s ease-in-out;
+  transition: background-color 0.15s ease-in-out;
 }
 
 .no-arrows::-webkit-outer-spin-button,
@@ -142,7 +142,8 @@ h1 {
   font-weight: 600;
 }
 
-#btn-submit:hover {
+#btn-submit:hover,
+#btn-submit:focus-visible {
   cursor: pointer;
   background-color: var(--color-btn-submit-hover);
 }
@@ -218,10 +219,20 @@ td {
   border-bottom: none;
 }
 
+tbody tr {
+  transition: background-color 0.2s ease-in-out;
+}
+
 tbody tr:hover {
   cursor: pointer;
   background-color: var(--color-table-hover);
-  transition: background-color 0.2s ease-in-out;
+}
+
+tbody tr:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+  border-radius: 0.3rem;
+  background-color: var(--color-table-hover);
 }
 
 .btn-delete {
@@ -234,7 +245,8 @@ tbody tr:hover {
   cursor: pointer;
 }
 
-.btn-delete:hover {
+.btn-delete:hover,
+.btn-delete:focus-visible {
   background-color: var(--color-btn-delete-hover);
 }
 
@@ -308,7 +320,8 @@ tbody tr:hover {
   cursor: pointer;
 }
 
-.btn-close:hover {
+.btn-close:hover,
+.btn-close:focus-visible {
   background-color: var(--color-btn-close-hover);
 }
 
@@ -398,13 +411,5 @@ tbody tr:hover {
   .btn-close {
     padding: 0.7rem 1.5rem;
     font-size: 1.1rem;
-  }
-
-  .btn-close:hover {
-    background-color: var(--color-btn-close-hover);
-  }
-
-  .btn-close:active {
-    background-color: var(--color-btn-close-active);
   }
 }
