@@ -252,7 +252,7 @@ function plantDetailsModal(plant) {
   const closeBtn = document.createElement("button");
   closeBtn.type = "button";
   closeBtn.textContent = "Stäng";
-  closeBtn.classList.add("close-btn");
+  closeBtn.classList.add("btn-close");
 
   closeBtn.addEventListener("click", () => modal.close());
 
