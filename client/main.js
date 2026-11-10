@@ -51,6 +51,7 @@ async function categoryDropdown() {
 
 function createPlantRow(plant) {
   const row = document.createElement("tr");
+  row.tabIndex = 0;
 
   const plantName = document.createElement("td");
   plantName.textContent = plant.plant_name;
@@ -85,6 +86,14 @@ function createPlantRow(plant) {
 
   row.addEventListener("click", () => {
     plantDetailsModal(plant);
+  });
+
+  row.addEventListener("keydown", (e) => {
+    if (e.target !== row) return;
+
+    if (e.key === "Enter" || e.key === " ") {
+      plantDetailsModal(plant);
+    }
   });
 
   row.append(plantName, amountToPlant, plantCategory, monthToPlant, delPlant);
