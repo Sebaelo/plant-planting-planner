@@ -238,9 +238,16 @@ function plantDetailsModal(plant) {
 
   modalDetails.append(amountDetails, monthDetails, categoryDetails);
 
-  // TODO: Create <section>, <h3> and <p>
+  const adviceSection = document.createElement("section");
+  adviceSection.classList.add("advice-section");
 
-  // TODO: Append <h3> and <p> to <section>
+  const adviceLabel = document.createElement("h3");
+  adviceLabel.textContent = "Skötselråd";
+
+  const adviceContent = document.createElement("p");
+  adviceContent.textContent = `${plant.planting_advice}`;
+
+  adviceSection.append(adviceLabel, adviceContent);
 
   const closeBtn = document.createElement("button");
   closeBtn.type = "button";
@@ -249,8 +256,7 @@ function plantDetailsModal(plant) {
 
   closeBtn.addEventListener("click", () => modal.close());
 
-  // TODO: Append section between modalDetails and closeBtn
-  modal.append(modalTitle, modalDetails, closeBtn);
+  modal.append(modalTitle, modalDetails, adviceSection, closeBtn);
 }
 
 categoryDropdown();
