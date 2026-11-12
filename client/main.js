@@ -94,6 +94,11 @@ function createPlantRow(plant) {
 
   editBtn.appendChild(editIcon);
 
+  editBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    plantEditModal(plant);
+  });
+
   const buttonWrapper = document.createElement("div");
   buttonWrapper.classList.add("button-wrapper");
   buttonWrapper.append(editBtn, deleteBtn);
