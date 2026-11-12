@@ -5,6 +5,7 @@ const searchInput = document.getElementById("search-plants");
 const modal = document.querySelector("dialog");
 
 let plants = [];
+let categories = [];
 
 const months = [
   "januari",
@@ -31,11 +32,13 @@ async function categoryDropdown() {
   try {
     const response = await fetch("/api/categories");
 
-    const categories = await response.json();
+    const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(categories.error);
+      throw new Error(data.error);
     }
+
+    categories = data;
 
     categories.forEach((category) => {
       const categoryOptions = document.createElement("option");
@@ -248,8 +251,6 @@ function createDetailRow(label, value) {
 function plantDetailsModal(plant) {
   modal.replaceChildren();
 
-  modal.showModal();
-
   const modalTitle = document.createElement("h2");
   modalTitle.textContent = plant.plant_name;
 
@@ -286,6 +287,7 @@ function plantDetailsModal(plant) {
   closeBtn.addEventListener("click", () => modal.close());
 
   modal.append(modalTitle, modalDetails, adviceSection, closeBtn);
+  modal.showModal();
 }
 
 categoryDropdown();
