@@ -321,6 +321,11 @@ tbody tr:focus-visible {
   width: 7rem;
 }
 
+.plant-details-row label {
+  font-weight: bold;
+  width: 10rem;
+}
+
 .advice-section h3 {
   font-weight: bold;
   padding-top: 0.5rem;
@@ -333,8 +338,29 @@ tbody tr:focus-visible {
 .plant-details-row dt,
 .plant-details-row dd,
 .advice-section h3,
-.advice-section p {
+.advice-section p,
+.plant-details-row label,
+.plant-details-row input,
+.plant-details-row select,
+.plant-details-row textarea {
   font-size: 1.2rem;
+}
+
+.plant-details-row input,
+.plant-details-row select,
+.plant-details-row textarea {
+  flex: 1;
+  min-width: 0;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border: 3px solid var(--color-border);
+  border-radius: 0.3rem;
+  padding: 0.5rem;
+}
+
+.plant-details-row:has(textarea) {
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .btn-close {
@@ -437,8 +463,19 @@ tbody tr:focus-visible {
   .plant-details-row dt,
   .plant-details-row dd,
   .advice-section h3,
-  .advice-section p {
+  .advice-section p,
+  .plant-details-row label,
+  .plant-details-row input,
+  .plant-details-row select,
+  .plant-details-row textarea {
     font-size: 1.1rem;
+  }
+
+  .plant-details-row input,
+  .plant-details-row select,
+  .plant-details-row textarea {
+    border-width: 2px;
+    padding: 0.4rem;
   }
 
   .btn-close {
