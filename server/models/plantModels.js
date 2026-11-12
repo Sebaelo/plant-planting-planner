@@ -8,6 +8,7 @@ export function getAllPlantsModel() {
           plants.plant_name,
           plants.amount_to_plant,
           plants.month_to_plant,
+          plants.category_id,
           plants.planting_advice,
           categories.category
         FROM plants
@@ -33,6 +34,7 @@ export function addPlantModel(
             plant_name,
             amount_to_plant,
             month_to_plant,
+            category_id,
             planting_advice,
         (SELECT category FROM categories WHERE categories.id = plants.category_id) AS category `,
     )
