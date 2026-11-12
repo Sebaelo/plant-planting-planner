@@ -114,6 +114,7 @@ function createPlantRow(plant) {
     if (e.target !== row) return;
 
     if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
       plantDetailsModal(plant);
     }
   });
