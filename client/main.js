@@ -5,6 +5,7 @@ const searchInput = document.getElementById("search-plants");
 const modal = document.querySelector("dialog");
 
 let plants = [];
+let categories = [];
 
 const months = [
   "januari",
@@ -31,11 +32,13 @@ async function categoryDropdown() {
   try {
     const response = await fetch("/api/categories");
 
-    const categories = await response.json();
+    const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(categories.error);
+      throw new Error(data.error);
     }
+
+    categories = data;
 
     categories.forEach((category) => {
       const categoryOptions = document.createElement("option");
@@ -81,8 +84,27 @@ function createPlantRow(plant) {
     deletePlant(plant.id);
   });
 
-  const delPlant = document.createElement("td");
-  delPlant.appendChild(deleteBtn);
+  const editBtn = document.createElement("button");
+  editBtn.type = "button";
+  editBtn.title = `Redigera ${plant.plant_name.toLowerCase()}`;
+  editBtn.classList.add("btn-edit");
+
+  const editIcon = document.createElement("img");
+  editIcon.src = "/assets/icons/edit.svg";
+
+  editBtn.appendChild(editIcon);
+
+  editBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    plantEditModal(plant);
+  });
+
+  const buttonWrapper = document.createElement("div");
+  buttonWrapper.classList.add("table-buttons");
+  buttonWrapper.append(editBtn, deleteBtn);
+
+  const tableButtons = document.createElement("td");
+  tableButtons.append(buttonWrapper);
 
   row.addEventListener("click", () => {
     plantDetailsModal(plant);
@@ -92,11 +114,18 @@ function createPlantRow(plant) {
     if (e.target !== row) return;
 
     if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
       plantDetailsModal(plant);
     }
   });
 
-  row.append(plantName, amountToPlant, plantCategory, monthToPlant, delPlant);
+  row.append(
+    plantName,
+    amountToPlant,
+    plantCategory,
+    monthToPlant,
+    tableButtons,
+  );
 
   tableBody.appendChild(row);
 }
@@ -210,6 +239,113 @@ searchInput.addEventListener("input", (event) => {
   searchPlants(event.target.value);
 });
 
+function createEditRow(labelText, field, id) {
+  const row = document.createElement("div");
+  row.classList.add("plant-details-row");
+
+  const label = document.createElement("label");
+  label.textContent = labelText;
+  label.htmlFor = id;
+
+  field.id = id;
+
+  row.append(label, field);
+  return row;
+}
+
+function plantEditModal(plant) {
+  modal.replaceChildren();
+
+  const modalTitle = document.createElement("h2");
+  modalTitle.textContent = plant.plant_name;
+
+  const form = document.createElement("form");
+  form.classList.add("plant-details");
+
+  const nameInput = document.createElement("input");
+  nameInput.type = "text";
+  nameInput.name = "plantName";
+  nameInput.required = true;
+  nameInput.value = plant.plant_name;
+
+  const nameRow = createEditRow("Växtnamn", nameInput, "edit-name");
+
+  const amountInput = document.createElement("input");
+  amountInput.type = "number";
+  amountInput.name = "amountToPlant";
+  amountInput.required = true;
+  amountInput.value = plant.amount_to_plant;
+  amountInput.classList.add("no-arrows");
+
+  const amountRow = createEditRow("Mängd", amountInput, "edit-amount");
+
+  const monthDropdown = document.createElement("select");
+
+  months.forEach((month, index) => {
+    const monthOption = document.createElement("option");
+    monthOption.value = index + 1;
+    monthOption.textContent = month[0].toUpperCase() + month.slice(1);
+    monthDropdown.append(monthOption);
+  });
+
+  monthDropdown.name = "monthToPlant";
+  monthDropdown.value = plant.month_to_plant;
+
+  const monthRow = createEditRow("Månad", monthDropdown, "edit-month");
+
+  const categorySelect = document.createElement("select");
+
+  categories.forEach((category) => {
+    const categoryOption = document.createElement("option");
+    categoryOption.value = category.id;
+    categoryOption.textContent = category.category;
+    categorySelect.append(categoryOption);
+  });
+
+  categorySelect.name = "plantCategory";
+  categorySelect.value = plant.category_id;
+
+  const categoryRow = createEditRow(
+    "Kategori",
+    categorySelect,
+    "edit-category",
+  );
+
+  const adviceTextarea = document.createElement("textarea");
+  adviceTextarea.name = "plantingAdvice";
+  adviceTextarea.rows = 5;
+  adviceTextarea.value = plant.planting_advice;
+
+  const adviceRow = createEditRow("Skötselråd", adviceTextarea, "edit-advice");
+
+  const closeBtn = document.createElement("button");
+  closeBtn.type = "button";
+  closeBtn.textContent = "Stäng";
+  closeBtn.classList.add("btn-close");
+
+  closeBtn.addEventListener("click", () => modal.close());
+
+  const saveBtn = document.createElement("button");
+  saveBtn.type = "submit";
+  saveBtn.textContent = "Spara";
+  saveBtn.classList.add("btn-save");
+
+  const modalButtons = document.createElement("div");
+  modalButtons.classList.add("modal-buttons");
+  modalButtons.append(saveBtn, closeBtn);
+
+  form.append(
+    nameRow,
+    amountRow,
+    monthRow,
+    categoryRow,
+    adviceRow,
+    modalButtons,
+  );
+  modal.append(modalTitle, form);
+  modal.showModal();
+}
+
 function createDetailRow(label, value) {
   const detailsRow = document.createElement("div");
   detailsRow.classList.add("plant-details-row");
@@ -228,10 +364,8 @@ function createDetailRow(label, value) {
 function plantDetailsModal(plant) {
   modal.replaceChildren();
 
-  modal.showModal();
-
   const modalTitle = document.createElement("h2");
-  modalTitle.textContent = `${plant.plant_name}`;
+  modalTitle.textContent = plant.plant_name;
 
   const modalDetails = document.createElement("dl");
   modalDetails.classList.add("plant-details");
@@ -254,7 +388,7 @@ function plantDetailsModal(plant) {
   adviceLabel.textContent = "Skötselråd";
 
   const adviceContent = document.createElement("p");
-  adviceContent.textContent = `${plant.planting_advice}`;
+  adviceContent.textContent = plant.planting_advice;
 
   adviceSection.append(adviceLabel, adviceContent);
 
@@ -266,6 +400,7 @@ function plantDetailsModal(plant) {
   closeBtn.addEventListener("click", () => modal.close());
 
   modal.append(modalTitle, modalDetails, adviceSection, closeBtn);
+  modal.showModal();
 }
 
 categoryDropdown();
