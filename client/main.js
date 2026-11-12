@@ -81,8 +81,22 @@ function createPlantRow(plant) {
     deletePlant(plant.id);
   });
 
-  const delPlant = document.createElement("td");
-  delPlant.appendChild(deleteBtn);
+  const editBtn = document.createElement("button");
+  editBtn.type = "button";
+  editBtn.title = `Redigera ${plant.plant_name.toLowerCase()}`;
+  editBtn.classList.add("btn-edit");
+
+  const editIcon = document.createElement("img");
+  editIcon.src = "/assets/icons/edit.svg";
+
+  editBtn.appendChild(editIcon);
+
+  const buttonWrapper = document.createElement("div");
+  buttonWrapper.classList.add("button-wrapper");
+  buttonWrapper.append(editBtn, deleteBtn);
+
+  const tableButtons = document.createElement("td");
+  tableButtons.append(buttonWrapper);
 
   row.addEventListener("click", () => {
     plantDetailsModal(plant);
@@ -96,7 +110,13 @@ function createPlantRow(plant) {
     }
   });
 
-  row.append(plantName, amountToPlant, plantCategory, monthToPlant, delPlant);
+  row.append(
+    plantName,
+    amountToPlant,
+    plantCategory,
+    monthToPlant,
+    tableButtons,
+  );
 
   tableBody.appendChild(row);
 }
@@ -231,7 +251,7 @@ function plantDetailsModal(plant) {
   modal.showModal();
 
   const modalTitle = document.createElement("h2");
-  modalTitle.textContent = `${plant.plant_name}`;
+  modalTitle.textContent = plant.plant_name;
 
   const modalDetails = document.createElement("dl");
   modalDetails.classList.add("plant-details");
@@ -254,7 +274,7 @@ function plantDetailsModal(plant) {
   adviceLabel.textContent = "Skötselråd";
 
   const adviceContent = document.createElement("p");
-  adviceContent.textContent = `${plant.planting_advice}`;
+  adviceContent.textContent = plant.planting_advice;
 
   adviceSection.append(adviceLabel, adviceContent);
 

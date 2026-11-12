@@ -25,9 +25,13 @@
   --color-btn-close-hover: #434c77;
   --color-btn-close-active: #313756;
 
+  --color-btn-edit: #1a2b3b;
+  --color-btn-edit-hover: #203549;
+  --color-btn-edit-active: #121f2c;
+
   --color-btn-delete: #3b1a1f;
   --color-btn-delete-hover: #4f2027;
-  --color-btn-delete-active: #2c1115;
+  --color-btn-delete-active: #35171c;
 }
 
 *,
@@ -191,7 +195,7 @@ h1 {
   max-width: 2250px;
   border: 3px solid var(--color-border);
   border-radius: 0.5rem;
-  overflow: hidden;
+  overflow-x: auto;
 }
 
 .table-section table {
@@ -235,9 +239,18 @@ tbody tr:focus-visible {
   background-color: var(--color-table-hover);
 }
 
+.button-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.btn-delete,
+.btn-edit {
+  flex-shrink: 0;
+}
+
 .btn-delete {
-  display: block;
-  margin-inline: auto;
   border: none;
   border-radius: 0.3rem;
   background-color: var(--color-btn-delete);
@@ -254,6 +267,23 @@ tbody tr:focus-visible {
   background-color: var(--color-btn-delete-active);
 }
 
+.btn-edit {
+  border: none;
+  border-radius: 0.3rem;
+  background-color: var(--color-btn-edit);
+  padding: 0.3rem;
+  cursor: pointer;
+}
+
+.btn-edit:hover,
+.btn-edit:focus-visible {
+  background-color: var(--color-btn-edit-hover);
+}
+
+.btn-edit:active {
+  background-color: var(--color-btn-edit-active);
+}
+
 #display-messages {
   padding: 0.5rem;
   text-align: right;
@@ -263,7 +293,7 @@ tbody tr:focus-visible {
 
 .plant-modal::backdrop {
   backdrop-filter: blur(0.5rem);
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .plant-modal {
@@ -393,6 +423,9 @@ tbody tr:focus-visible {
     font-size: 1rem;
   }
 
+  .button-wrapper {
+    gap: 2rem;
+  }
   .plant-modal {
     border-width: 2px;
   }
