@@ -100,7 +100,7 @@ function createPlantRow(plant) {
   });
 
   const buttonWrapper = document.createElement("div");
-  buttonWrapper.classList.add("button-wrapper");
+  buttonWrapper.classList.add("table-buttons");
   buttonWrapper.append(editBtn, deleteBtn);
 
   const tableButtons = document.createElement("td");
@@ -317,8 +317,30 @@ function plantEditModal(plant) {
 
   const adviceRow = createEditRow("Skötselråd", adviceTextarea, "edit-advice");
 
-  form.append(nameRow, amountRow, monthRow, categoryRow, adviceRow);
+  const closeBtn = document.createElement("button");
+  closeBtn.type = "button";
+  closeBtn.textContent = "Stäng";
+  closeBtn.classList.add("btn-close");
 
+  closeBtn.addEventListener("click", () => modal.close());
+
+  const saveBtn = document.createElement("button");
+  saveBtn.type = "submit";
+  saveBtn.textContent = "Spara";
+  saveBtn.classList.add("btn-save");
+
+  const modalButtons = document.createElement("div");
+  modalButtons.classList.add("modal-buttons");
+  modalButtons.append(saveBtn, closeBtn);
+
+  form.append(
+    nameRow,
+    amountRow,
+    monthRow,
+    categoryRow,
+    adviceRow,
+    modalButtons,
+  );
   modal.append(modalTitle, form);
   modal.showModal();
 }
