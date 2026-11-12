@@ -238,6 +238,91 @@ searchInput.addEventListener("input", (event) => {
   searchPlants(event.target.value);
 });
 
+function createEditRow(labelText, field, id) {
+  const row = document.createElement("div");
+  row.classList.add("plant-details-row");
+
+  const label = document.createElement("label");
+  label.textContent = labelText;
+  label.htmlFor = id;
+
+  field.id = id;
+
+  row.append(label, field);
+  return row;
+}
+
+function plantEditModal(plant) {
+  modal.replaceChildren();
+
+  const modalTitle = document.createElement("h2");
+  modalTitle.textContent = plant.plant_name;
+
+  const form = document.createElement("form");
+  form.classList.add("plant-details");
+
+  const nameInput = document.createElement("input");
+  nameInput.type = "text";
+  nameInput.name = "plantName";
+  nameInput.required = true;
+  nameInput.value = plant.plant_name;
+
+  const nameRow = createEditRow("Växtnamn", nameInput, "edit-name");
+
+  const amountInput = document.createElement("input");
+  amountInput.type = "number";
+  amountInput.name = "amountToPlant";
+  amountInput.required = true;
+  amountInput.value = plant.amount_to_plant;
+  amountInput.classList.add("no-arrows");
+
+  const amountRow = createEditRow("Mängd", amountInput, "edit-amount");
+
+  const monthDropdown = document.createElement("select");
+
+  months.forEach((month, index) => {
+    const monthOption = document.createElement("option");
+    monthOption.value = index + 1;
+    monthOption.textContent = month[0].toUpperCase() + month.slice(1);
+    monthDropdown.append(monthOption);
+  });
+
+  monthDropdown.name = "monthToPlant";
+  monthDropdown.value = plant.month_to_plant;
+
+  const monthRow = createEditRow("Månad", monthDropdown, "edit-month");
+
+  const categorySelect = document.createElement("select");
+
+  categories.forEach((category) => {
+    const categoryOption = document.createElement("option");
+    categoryOption.value = category.id;
+    categoryOption.textContent = category.category;
+    categorySelect.append(categoryOption);
+  });
+
+  categorySelect.name = "plantCategory";
+  categorySelect.value = plant.category_id;
+
+  const categoryRow = createEditRow(
+    "Kategori",
+    categorySelect,
+    "edit-category",
+  );
+
+  const adviceTextarea = document.createElement("textarea");
+  adviceTextarea.name = "plantingAdvice";
+  adviceTextarea.rows = 5;
+  adviceTextarea.value = plant.planting_advice;
+
+  const adviceRow = createEditRow("Skötselråd", adviceTextarea, "edit-advice");
+
+  form.append(nameRow, amountRow, monthRow, categoryRow, adviceRow);
+
+  modal.append(modalTitle, form);
+  modal.showModal();
+}
+
 function createDetailRow(label, value) {
   const detailsRow = document.createElement("div");
   detailsRow.classList.add("plant-details-row");
