@@ -22,6 +22,14 @@ delete_plant() {
         -w "\nHTTP %{http_code}\n\n"
 }
 
+edit_plant() {
+    echo "TEST: $1"
+    curl -X PUT "$BASE_URL/6" \
+        -H "Content-Type: application/json" \
+        -d "$2" \
+        -w "\nHTTP %{http_code}\n\n"
+}
+
 test_addPlant() {
     post_plant_no_body "Testing ?? operator by not sending any data or content-type"
     post_plant "Only sending plantName" \
@@ -164,3 +172,17 @@ test_deletePlant() {
     delete_plant "Repeated valid ID" "4"
 }
 test_deletePlant
+
+test_editPlant() {
+    edit_plant "Testing an edit" \
+    '
+    {
+        "plantName": "Tomat",
+        "amountToPlant": 2,
+        "monthToPlant": 1,
+        "plantingAdvice": "Hello, testing to update",
+        "plantCategory": 2
+    }
+    '
+}
+test_editPlant
