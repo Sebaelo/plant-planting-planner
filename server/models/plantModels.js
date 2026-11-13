@@ -27,7 +27,7 @@ export function addPlantModel(
   return db
     .prepare(
       `
-        INSERT INTO plants ( plant_name, amount_to_plant, month_to_plant, planting_advice, category_id )
+        INSERT INTO plants (plant_name, amount_to_plant, month_to_plant, planting_advice, category_id)
         VALUES (?, ?, ?, ?, ?)
         RETURNING
             id,
@@ -36,11 +36,47 @@ export function addPlantModel(
             month_to_plant,
             category_id,
             planting_advice,
-        (SELECT category FROM categories WHERE categories.id = plants.category_id) AS category `,
+        (SELECT category FROM categories WHERE categories.id = plants.category_id) AS category`,
     )
     .get(plantName, amountToPlant, monthToPlant, plantingAdvice, category);
 }
 
 export function deletePlantModel(plantId) {
   return db.prepare("DELETE FROM plants WHERE id = ?").run(plantId);
+}
+
+export function editPlantModel(
+  plantName,
+  amountToPlant,
+  monthToPlant,
+  plantingAdvice,
+  category,
+  plantId,
+) {
+  return db
+    .prepare(
+      `
+      UPDATE plants
+      SET plant_name = ?,
+          amount_to_plant = ?,
+          month_to_plant = ?,
+          planting_advice = ?,
+          category_id = ?
+      WHERE id = ?
+      RETURNING id,
+        plant_name,
+        amount_to_plant,
+        month_to_plant,
+        planting_advice,
+        category_id,
+      (SELECT category FROM categories WHERE categories.id = plants.category_id) AS category`,
+    )
+    .get(
+      plantName,
+      amountToPlant,
+      monthToPlant,
+      plantingAdvice,
+      category,
+      plantId,
+    );
 }
