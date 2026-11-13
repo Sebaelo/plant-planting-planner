@@ -155,8 +155,8 @@ function renderTable() {
   });
 }
 
-async function postForm(event) {
-  event.preventDefault();
+async function postForm(e) {
+  e.preventDefault();
 
   const formData = new FormData(plantForm);
   const plant = Object.fromEntries(formData);
@@ -238,6 +238,63 @@ async function searchPlants(query) {
 searchInput.addEventListener("input", (event) => {
   searchPlants(event.target.value);
 });
+
+function createDetailRow(label, value) {
+  const detailsRow = document.createElement("div");
+  detailsRow.classList.add("plant-details-row");
+
+  const detailsLabel = document.createElement("dt");
+  detailsLabel.textContent = label;
+
+  const detailsValue = document.createElement("dd");
+  detailsValue.textContent = value;
+
+  detailsRow.append(detailsLabel, detailsValue);
+
+  return detailsRow;
+}
+
+function plantDetailsModal(plant) {
+  modal.replaceChildren();
+
+  const modalTitle = document.createElement("h2");
+  modalTitle.textContent = plant.plant_name;
+
+  const modalDetails = document.createElement("dl");
+  modalDetails.classList.add("plant-details");
+
+  const amountDetails = createDetailRow("Mängd", `${plant.amount_to_plant} st`);
+
+  const monthDetails = createDetailRow(
+    "Månad",
+    displayMonth(plant.month_to_plant),
+  );
+
+  const categoryDetails = createDetailRow("Kategori", plant.category);
+
+  modalDetails.append(amountDetails, monthDetails, categoryDetails);
+
+  const adviceSection = document.createElement("section");
+  adviceSection.classList.add("advice-section");
+
+  const adviceLabel = document.createElement("h3");
+  adviceLabel.textContent = "Skötselråd";
+
+  const adviceContent = document.createElement("p");
+  adviceContent.textContent = plant.planting_advice;
+
+  adviceSection.append(adviceLabel, adviceContent);
+
+  const closeBtn = document.createElement("button");
+  closeBtn.type = "button";
+  closeBtn.textContent = "Stäng";
+  closeBtn.classList.add("btn-close");
+
+  closeBtn.addEventListener("click", () => modal.close());
+
+  modal.append(modalTitle, modalDetails, adviceSection, closeBtn);
+  modal.showModal();
+}
 
 function createEditRow(labelText, field, id) {
   const row = document.createElement("div");
@@ -334,6 +391,8 @@ function plantEditModal(plant) {
   modalButtons.classList.add("modal-buttons");
   modalButtons.append(saveBtn, closeBtn);
 
+  form.addEventListener("submit", (e) => editPlant(e, plant.id));
+
   form.append(
     nameRow,
     amountRow,
@@ -346,61 +405,40 @@ function plantEditModal(plant) {
   modal.showModal();
 }
 
-function createDetailRow(label, value) {
-  const detailsRow = document.createElement("div");
-  detailsRow.classList.add("plant-details-row");
+async function editPlant(e, plantId) {
+  e.preventDefault();
+  console.log("plantId: ", plantId);
 
-  const detailsLabel = document.createElement("dt");
-  detailsLabel.textContent = label;
+  const formData = new FormData(event.target);
+  const plantData = Object.fromEntries(formData);
 
-  const detailsValue = document.createElement("dd");
-  detailsValue.textContent = value;
+  try {
+    const response = await fetch(`/api/plants/${plantId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(plantData),
+    });
 
-  detailsRow.append(detailsLabel, detailsValue);
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error);
+    }
 
-  return detailsRow;
-}
+    plants = plants.map((plant) =>
+      plant.id === plantId ? data.editedPlant : plant,
+    );
 
-function plantDetailsModal(plant) {
-  modal.replaceChildren();
+    renderTable();
 
-  const modalTitle = document.createElement("h2");
-  modalTitle.textContent = plant.plant_name;
-
-  const modalDetails = document.createElement("dl");
-  modalDetails.classList.add("plant-details");
-
-  const amountDetails = createDetailRow("Mängd", `${plant.amount_to_plant} st`);
-
-  const monthDetails = createDetailRow(
-    "Månad",
-    displayMonth(plant.month_to_plant),
-  );
-
-  const categoryDetails = createDetailRow("Kategori", plant.category);
-
-  modalDetails.append(amountDetails, monthDetails, categoryDetails);
-
-  const adviceSection = document.createElement("section");
-  adviceSection.classList.add("advice-section");
-
-  const adviceLabel = document.createElement("h3");
-  adviceLabel.textContent = "Skötselråd";
-
-  const adviceContent = document.createElement("p");
-  adviceContent.textContent = plant.planting_advice;
-
-  adviceSection.append(adviceLabel, adviceContent);
-
-  const closeBtn = document.createElement("button");
-  closeBtn.type = "button";
-  closeBtn.textContent = "Stäng";
-  closeBtn.classList.add("btn-close");
-
-  closeBtn.addEventListener("click", () => modal.close());
-
-  modal.append(modalTitle, modalDetails, adviceSection, closeBtn);
-  modal.showModal();
+    displayMessages.textContent = data.message;
+    setTimeout(() => {
+      displayMessages.textContent = "";
+      modal.close();
+    }, 2000);
+  } catch (err) {
+    console.error(err);
+    displayMessages.textContent = err.message;
+  }
 }
 
 categoryDropdown();
