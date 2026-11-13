@@ -3,6 +3,7 @@ import {
   getAllPlantsModel,
   addPlantModel,
   deletePlantModel,
+  editPlantModel,
 } from "../models/plantModels.js";
 
 function validatePlant(
@@ -145,6 +146,74 @@ export function searchPlants(req, res) {
     return res.status(500).json({
       error:
         "Något gick fel, kunde inte genomföra sökningen. Vänligen försök igen...",
+    });
+  }
+}
+
+export function editPlant(req, res) {
+  const plantId = Number(req.params.id);
+
+  if (!Number.isInteger(plantId) || plantId <= 0) {
+    return res.status(400).json({ error: "Ogiltigt ID." });
+  }
+
+  const {
+    plantName,
+    amountToPlant,
+    monthToPlant,
+    plantCategory,
+    plantingAdvice,
+  } = req.body ?? {};
+
+  const amount = Number(amountToPlant);
+  const month = Number(monthToPlant);
+  const category = Number(plantCategory);
+
+  const error = validatePlant(
+    plantName,
+    amount,
+    month,
+    category,
+    plantingAdvice,
+  );
+
+  if (error) {
+    return res.status(400).json({ error });
+  }
+
+  try {
+    const existingCategory = db
+      .prepare("SELECT id FROM categories WHERE id = ?")
+      .get(category);
+
+    if (!existingCategory) {
+      return res.status(400).json({
+        error: "Den valda kategorin finns inte.",
+      });
+    }
+
+    const editedPlant = editPlantModel(
+      plantName,
+      amount,
+      month,
+      plantingAdvice,
+      category,
+      plantId,
+    );
+
+    if (!editedPlant) {
+      return res.status(404).json({ error: "Inget inlägg hittades." });
+    }
+
+    return res.status(200).json({
+      message: "Inlägget uppdaterades!",
+      editedPlant,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      error:
+        "Något gick fel, kunde inte uppdatera inlägget. Vänligen försök igen...",
     });
   }
 }
