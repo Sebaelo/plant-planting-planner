@@ -1,30 +1,12 @@
+import { months, displayMonth, displayMessage } from "./utils.js";
+
 const plantForm = document.getElementById("plant-form");
 const tableBody = document.getElementById("table-body");
-const displayMessages = document.getElementById("display-messages");
 const searchInput = document.getElementById("search-plants");
 const modal = document.querySelector("dialog");
 
 let plants = [];
 let categories = [];
-
-const months = [
-  "januari",
-  "februari",
-  "mars",
-  "april",
-  "maj",
-  "juni",
-  "juli",
-  "augusti",
-  "september",
-  "oktober",
-  "november",
-  "december",
-];
-
-function displayMonth(monthNumber) {
-  return months[monthNumber - 1];
-}
 
 async function categoryDropdown() {
   const categorySelect = document.getElementById("category");
@@ -48,7 +30,7 @@ async function categoryDropdown() {
     });
   } catch (err) {
     console.error(err);
-    displayMessages.textContent = err.message;
+    displayMessage(err.message, "error");
   }
 }
 
@@ -91,6 +73,7 @@ function createPlantRow(plant) {
 
   const editIcon = document.createElement("img");
   editIcon.src = "/assets/icons/edit.svg";
+  editIcon.alt = `Redigera ${plant.plant_name}`;
 
   editBtn.appendChild(editIcon);
 
@@ -141,11 +124,12 @@ async function fetchPlants() {
     }
 
     plants = data;
-    renderTable();
   } catch (err) {
     console.error(err);
-    displayMessages.textContent = err.message;
+    displayMessage(err.message, "error");
+    return;
   }
+  renderTable();
 }
 
 function renderTable() {
@@ -164,7 +148,7 @@ async function postForm(e) {
   const amount = Number(plant.amountToPlant);
 
   if (!Number.isInteger(amount) || amount <= 0) {
-    displayMessages.textContent = "Mängd måste vara ett positivt heltal.";
+    displayMessage("Mängd måste vara ett positivt heltal.", "error");
     return;
   }
 
@@ -186,13 +170,13 @@ async function postForm(e) {
 
     plantForm.reset();
 
-    displayMessages.textContent = data.message;
+    displayMessage(data.message);
     setTimeout(() => {
-      displayMessages.textContent = "";
+      displayMessage("");
     }, 2000);
   } catch (err) {
     console.error(err);
-    displayMessages.textContent = err.message;
+    displayMessage(err.message, "error");
   }
 }
 
@@ -213,7 +197,7 @@ async function deletePlant(id) {
     renderTable();
   } catch (err) {
     console.error(err);
-    displayMessages.textContent = err.message;
+    displayMessage(err.message, "error");
   }
 }
 
@@ -231,7 +215,7 @@ async function searchPlants(query) {
     renderTable();
   } catch (err) {
     console.error(err);
-    displayMessages.textContent = err.message;
+    displayMessage(err.message, "error");
   }
 }
 
@@ -407,9 +391,8 @@ function plantEditModal(plant) {
 
 async function editPlant(e, plantId) {
   e.preventDefault();
-  console.log("plantId: ", plantId);
 
-  const formData = new FormData(event.target);
+  const formData = new FormData(e.target);
   const plantData = Object.fromEntries(formData);
 
   try {
@@ -430,14 +413,14 @@ async function editPlant(e, plantId) {
 
     renderTable();
 
-    displayMessages.textContent = data.message;
+    displayMessage(data.message);
     setTimeout(() => {
-      displayMessages.textContent = "";
+      displayMessage("");
       modal.close();
     }, 2000);
   } catch (err) {
     console.error(err);
-    displayMessages.textContent = err.message;
+    displayMessage(err.message, "error");
   }
 }
 

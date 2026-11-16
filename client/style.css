@@ -4,6 +4,7 @@
   --color-border: #2a2f2e;
 
   --color-text: #c8f1de;
+  --color-error-text: #f1c8c8;
 
   --color-accent: #34d399;
 
@@ -289,6 +290,10 @@ tbody tr:focus-visible {
   text-align: right;
   font-size: 1.2rem;
   font-weight: 600;
+}
+
+.error-message {
+  color: var(--color-error-text);
 }
 
 .plant-modal::backdrop {
