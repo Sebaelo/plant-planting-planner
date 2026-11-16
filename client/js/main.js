@@ -1,4 +1,12 @@
 import { months, displayMonth, displayMessage } from "./utils.js";
+import {
+  getPlants,
+  getCategories,
+  addPlant,
+  updatePlant,
+  deletePlant,
+  searchPlants,
+} from "./api.js";
 
 const plantForm = document.getElementById("plant-form");
 const tableBody = document.getElementById("table-body");
@@ -12,15 +20,7 @@ async function categoryDropdown() {
   const categorySelect = document.getElementById("category");
 
   try {
-    const response = await fetch("/api/categories");
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error);
-    }
-
-    categories = data;
+    categories = await getCategories();
 
     categories.forEach((category) => {
       const categoryOptions = document.createElement("option");
@@ -63,7 +63,7 @@ function createPlantRow(plant) {
 
   deleteBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    deletePlant(plant.id);
+    handleDeletePlant(plant.id);
   });
 
   const editBtn = document.createElement("button");
@@ -115,21 +115,12 @@ function createPlantRow(plant) {
 
 async function fetchPlants() {
   try {
-    const response = await fetch("/api/plants");
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error);
-    }
-
-    plants = data;
+    plants = await getPlants();
+    renderTable();
   } catch (err) {
     console.error(err);
     displayMessage(err.message, "error");
-    return;
   }
-  renderTable();
 }
 
 function renderTable() {
@@ -153,17 +144,7 @@ async function postForm(e) {
   }
 
   try {
-    const response = await fetch("/api/plants", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(plant),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error);
-    }
+    const data = await addPlant(plant);
 
     plants.push(data.addedPlant);
     renderTable();
@@ -182,16 +163,9 @@ async function postForm(e) {
 
 plantForm.addEventListener("submit", postForm);
 
-async function deletePlant(id) {
+async function handleDeletePlant(id) {
   try {
-    const response = await fetch(`/api/plants/${id}`, {
-      method: "DELETE",
-    });
-
-    if (!response.ok) {
-      const delError = await response.json();
-      throw new Error(delError.error);
-    }
+    await deletePlant(id);
 
     plants = plants.filter((plant) => plant.id !== id);
     renderTable();
@@ -201,17 +175,9 @@ async function deletePlant(id) {
   }
 }
 
-async function searchPlants(query) {
+async function queryPlants(query) {
   try {
-    const response = await fetch(`/api/plants/search?q=${query}`);
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error);
-    }
-
-    plants = data;
+    plants = await searchPlants(query);
     renderTable();
   } catch (err) {
     console.error(err);
@@ -220,7 +186,7 @@ async function searchPlants(query) {
 }
 
 searchInput.addEventListener("input", (event) => {
-  searchPlants(event.target.value);
+  queryPlants(event.target.value);
 });
 
 function createDetailRow(label, value) {
@@ -396,16 +362,7 @@ async function editPlant(e, plantId) {
   const plantData = Object.fromEntries(formData);
 
   try {
-    const response = await fetch(`/api/plants/${plantId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(plantData),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.error);
-    }
+    const data = await updatePlant(plantId, plantData);
 
     plants = plants.map((plant) =>
       plant.id === plantId ? data.editedPlant : plant,
