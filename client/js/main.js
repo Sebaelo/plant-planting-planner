@@ -7,15 +7,12 @@ import {
   searchPlants,
 } from "./api.js";
 
-import { displayMonth, displayMessage } from "./utils.js";
-import { plantDetailsModal, plantEditModal } from "./modals.js";
+import { displayMessage } from "./utils.js";
+import { renderTable } from "./table.js";
 
 const plantForm = document.getElementById("plant-form");
-const tableBody = document.getElementById("table-body");
 const searchInput = document.getElementById("search-plants");
 const modal = document.querySelector("dialog");
-
-let plants = [];
 
 async function categoryDropdown() {
   const categorySelect = document.getElementById("category");
@@ -35,105 +32,22 @@ async function categoryDropdown() {
   }
 }
 
-function createPlantRow(plant) {
-  const row = document.createElement("tr");
-  row.tabIndex = 0;
-
-  const plantName = document.createElement("td");
-  plantName.textContent = plant.plant_name;
-
-  const amountToPlant = document.createElement("td");
-  amountToPlant.textContent = `${plant.amount_to_plant} st`;
-
-  const plantCategory = document.createElement("td");
-  plantCategory.textContent = plant.category;
-
-  const monthToPlant = document.createElement("td");
-  monthToPlant.textContent = displayMonth(plant.month_to_plant);
-
-  const deleteBtn = document.createElement("button");
-  deleteBtn.type = "button";
-  deleteBtn.title = `Ta bort ${plant.plant_name.toLowerCase()}`;
-  deleteBtn.classList.add("btn-delete");
-
-  const deleteIcon = document.createElement("img");
-  deleteIcon.src = "/assets/icons/delete.svg";
-  deleteIcon.alt = `Ta bort ${plant.plant_name}`;
-
-  deleteBtn.appendChild(deleteIcon);
-
-  deleteBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    handleDeletePlant(plant.id);
-  });
-
-  const editBtn = document.createElement("button");
-  editBtn.type = "button";
-  editBtn.title = `Redigera ${plant.plant_name.toLowerCase()}`;
-  editBtn.classList.add("btn-edit");
-
-  const editIcon = document.createElement("img");
-  editIcon.src = "/assets/icons/edit.svg";
-  editIcon.alt = `Redigera ${plant.plant_name}`;
-
-  editBtn.appendChild(editIcon);
-
-  editBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    plantEditModal(plant, editPlant);
-  });
-
-  const buttonWrapper = document.createElement("div");
-  buttonWrapper.classList.add("table-buttons");
-  buttonWrapper.append(editBtn, deleteBtn);
-
-  const tableButtons = document.createElement("td");
-  tableButtons.append(buttonWrapper);
-
-  row.addEventListener("click", () => {
-    plantDetailsModal(plant);
-  });
-
-  row.addEventListener("keydown", (e) => {
-    if (e.target !== row) return;
-
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      plantDetailsModal(plant);
-    }
-  });
-
-  row.append(
-    plantName,
-    amountToPlant,
-    plantCategory,
-    monthToPlant,
-    tableButtons,
-  );
-
-  tableBody.appendChild(row);
-}
-
-async function fetchPlants() {
+async function renderPlants() {
   try {
-    plants = await getPlants();
-    renderTable();
+    const query = searchInput.value;
+
+    const plants = query ? await searchPlants(query) : await getPlants();
+
+    renderTable(plants, handleDeletePlant, editPlant);
   } catch (err) {
     console.error(err);
     displayMessage(err.message, "error");
   }
 }
 
-function renderTable() {
-  tableBody.replaceChildren();
-  plants.forEach((plant) => {
-    createPlantRow(plant);
-  });
-}
+searchInput.addEventListener("input", renderPlants);
 
-async function postForm(e) {
-  e.preventDefault();
-
+async function postForm() {
   const formData = new FormData(plantForm);
   const plant = Object.fromEntries(formData);
 
@@ -147,10 +61,9 @@ async function postForm(e) {
   try {
     const data = await addPlant(plant);
 
-    plants.push(data.addedPlant);
-    renderTable();
-
+    searchInput.value = "";
     plantForm.reset();
+    renderPlants();
 
     displayMessage(data.message);
     setTimeout(() => {
@@ -162,33 +75,21 @@ async function postForm(e) {
   }
 }
 
-plantForm.addEventListener("submit", postForm);
+plantForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  postForm();
+});
 
 async function handleDeletePlant(id) {
   try {
     await deletePlant(id);
 
-    plants = plants.filter((plant) => plant.id !== id);
-    renderTable();
+    renderPlants();
   } catch (err) {
     console.error(err);
     displayMessage(err.message, "error");
   }
 }
-
-async function queryPlants(query) {
-  try {
-    plants = await searchPlants(query);
-    renderTable();
-  } catch (err) {
-    console.error(err);
-    displayMessage(err.message, "error");
-  }
-}
-
-searchInput.addEventListener("input", (event) => {
-  queryPlants(event.target.value);
-});
 
 async function editPlant(e, plantId) {
   e.preventDefault();
@@ -199,11 +100,7 @@ async function editPlant(e, plantId) {
   try {
     const data = await updatePlant(plantId, plantData);
 
-    plants = plants.map((plant) =>
-      plant.id === plantId ? data.editedPlant : plant,
-    );
-
-    renderTable();
+    renderPlants();
 
     displayMessage(data.message);
     setTimeout(() => {
@@ -217,4 +114,4 @@ async function editPlant(e, plantId) {
 }
 
 categoryDropdown();
-fetchPlants();
+renderPlants();
