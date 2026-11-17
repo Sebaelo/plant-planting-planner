@@ -28,7 +28,10 @@ async function categoryDropdown() {
     });
   } catch (err) {
     console.error(err);
-    displayMessage(err.message, "error");
+    displayMessage(
+      "Kunde inte hämta kategorierna, vänligen försök igen...",
+      "error",
+    );
   }
 }
 
@@ -41,7 +44,10 @@ async function renderPlants() {
     renderTable(plants, handleDeletePlant, editPlant);
   } catch (err) {
     console.error(err);
-    displayMessage(err.message, "error");
+    displayMessage(
+      "Kunde inte hämta växterna, vänligen försök igen...",
+      "error",
+    );
   }
 }
 
@@ -71,7 +77,10 @@ async function postForm() {
     }, 2000);
   } catch (err) {
     console.error(err);
-    displayMessage(err.message, "error");
+    displayMessage(
+      "Kunde inte lägga till växten, vänligen försök igen...",
+      "error",
+    );
   }
 }
 
@@ -87,7 +96,10 @@ async function handleDeletePlant(id) {
     renderPlants();
   } catch (err) {
     console.error(err);
-    displayMessage(err.message, "error");
+    displayMessage(
+      "Kunde inte ta bort växten, vänligen försök igen...",
+      "error",
+    );
   }
 }
 
@@ -109,7 +121,10 @@ async function editPlant(e, plantId) {
     }, 2000);
   } catch (err) {
     console.error(err);
-    displayMessage(err.message, "error");
+    displayMessage(
+      "Kunde inte spara redigeringen, vänligen försök igen...",
+      "error",
+    );
   }
 }
 
