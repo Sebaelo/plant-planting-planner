@@ -1,7 +1,7 @@
 import { searchPlants, getPlants, deletePlant, updatePlant } from "./api.js";
 import { modal } from "./modals.js";
 import { renderTable } from "./table.js";
-import { displayMessage } from "./utils.js";
+import { displayMessage, validatePlant } from "./utils.js";
 
 export const searchInput = document.getElementById("search-plants");
 
@@ -41,6 +41,12 @@ export async function editPlant(e, plantId) {
 
   const formData = new FormData(e.target);
   const plantData = Object.fromEntries(formData);
+
+  const error = validatePlant(plantData);
+  if (error) {
+    displayMessage(error, "error");
+    return;
+  }
 
   try {
     const data = await updatePlant(plantId, plantData);

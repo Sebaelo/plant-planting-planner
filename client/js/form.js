@@ -1,6 +1,6 @@
 import { getCategories, addPlant } from "./api.js";
 import { searchInput, renderPlants } from "./plants.js";
-import { displayMessage } from "./utils.js";
+import { displayMessage, validatePlant } from "./utils.js";
 
 const plantForm = document.getElementById("plant-form");
 
@@ -31,8 +31,9 @@ async function postForm() {
 
   const amount = Number(plant.amountToPlant);
 
-  if (!Number.isInteger(amount) || amount <= 0) {
-    displayMessage("Mängd måste vara ett positivt heltal.", "error");
+  const error = validatePlant(plant);
+  if (error) {
+    displayMessage(error, "error");
     return;
   }
 
