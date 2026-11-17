@@ -150,6 +150,9 @@ export async function plantEditModal(plant) {
 
   const adviceRow = createEditRow("Skötselråd", adviceTextarea, "edit-advice");
 
+  const modalMessage = document.createElement("p");
+  modalMessage.classList.add("modal-message");
+
   const closeBtn = document.createElement("button");
   closeBtn.type = "button";
   closeBtn.textContent = "Stäng";
@@ -174,6 +177,7 @@ export async function plantEditModal(plant) {
     monthRow,
     categoryRow,
     adviceRow,
+    modalMessage,
     modalButtons,
   );
   modal.append(modalTitle, form);
