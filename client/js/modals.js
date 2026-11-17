@@ -1,7 +1,7 @@
 import { months, displayMonth, displayMessage } from "./utils.js";
 import { getCategories } from "./api.js";
 
-const modal = document.querySelector("dialog");
+export const modal = document.querySelector("dialog");
 
 function createDetailRow(label, value) {
   const detailsRow = document.createElement("div");

@@ -9,10 +9,9 @@ import {
 
 import { displayMessage } from "./utils.js";
 import { renderTable } from "./table.js";
+import { renderPlants, searchInput } from "./plants.js";
 
 const plantForm = document.getElementById("plant-form");
-const searchInput = document.getElementById("search-plants");
-const modal = document.querySelector("dialog");
 
 async function categoryDropdown() {
   const categorySelect = document.getElementById("category");
@@ -34,24 +33,6 @@ async function categoryDropdown() {
     );
   }
 }
-
-async function renderPlants() {
-  try {
-    const query = searchInput.value;
-
-    const plants = query ? await searchPlants(query) : await getPlants();
-
-    renderTable(plants, handleDeletePlant, editPlant);
-  } catch (err) {
-    console.error(err);
-    displayMessage(
-      "Kunde inte hämta växterna, vänligen försök igen...",
-      "error",
-    );
-  }
-}
-
-searchInput.addEventListener("input", renderPlants);
 
 async function postForm() {
   const formData = new FormData(plantForm);
@@ -88,45 +69,6 @@ plantForm.addEventListener("submit", (e) => {
   e.preventDefault();
   postForm();
 });
-
-async function handleDeletePlant(id) {
-  try {
-    await deletePlant(id);
-
-    renderPlants();
-  } catch (err) {
-    console.error(err);
-    displayMessage(
-      "Kunde inte ta bort växten, vänligen försök igen...",
-      "error",
-    );
-  }
-}
-
-async function editPlant(e, plantId) {
-  e.preventDefault();
-
-  const formData = new FormData(e.target);
-  const plantData = Object.fromEntries(formData);
-
-  try {
-    const data = await updatePlant(plantId, plantData);
-
-    renderPlants();
-
-    displayMessage(data.message);
-    setTimeout(() => {
-      displayMessage("");
-      modal.close();
-    }, 2000);
-  } catch (err) {
-    console.error(err);
-    displayMessage(
-      "Kunde inte spara redigeringen, vänligen försök igen...",
-      "error",
-    );
-  }
-}
 
 categoryDropdown();
 renderPlants();
