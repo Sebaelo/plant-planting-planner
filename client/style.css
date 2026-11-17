@@ -85,7 +85,10 @@ a {
 }
 
 button {
-  transition: background-color 0.15s ease-in-out;
+  transition:
+    background-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out,
+    translate 0.15s ease-in-out;
 }
 
 .no-arrows::-webkit-outer-spin-button,
@@ -145,6 +148,10 @@ h1 {
   padding: 1rem;
   font-size: 1.2rem;
   font-weight: 600;
+  box-shadow:
+    inset 0 1px 0 #ffffff59,
+    inset 0 -2px 0 #0003,
+    0 1px 2px #0006;
 }
 
 #btn-submit:hover,
@@ -154,7 +161,8 @@ h1 {
 }
 
 #btn-submit:active {
-  background-color: var(--color-btn-submit-active);
+  translate: 0 1px;
+  box-shadow: inset 0 2px 4px #0004;
 }
 
 .search-wrapper {
@@ -257,6 +265,10 @@ tbody tr:focus-visible {
   background-color: var(--color-btn-delete);
   padding: 0.3rem;
   cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 #d98b9440,
+    inset 0 -2px 0 #0003,
+    0 1px 2px #0006;
 }
 
 .btn-delete:hover,
@@ -265,7 +277,8 @@ tbody tr:focus-visible {
 }
 
 .btn-delete:active {
-  background-color: var(--color-btn-delete-active);
+  translate: 0 1px;
+  box-shadow: inset 0 2px 4px #0004;
 }
 
 .btn-edit {
@@ -274,6 +287,10 @@ tbody tr:focus-visible {
   background-color: var(--color-btn-edit);
   padding: 0.3rem;
   cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 #8baac440,
+    inset 0 -2px 0 #0003,
+    0 1px 2px #0006;
 }
 
 .btn-edit:hover,
@@ -282,11 +299,14 @@ tbody tr:focus-visible {
 }
 
 .btn-edit:active {
-  background-color: var(--color-btn-edit-active);
+  translate: 0 1px;
+  box-shadow: inset 0 2px 4px #0004;
 }
 
-#display-messages {
+#display-messages,
+.modal-message {
   padding: 0.5rem;
+  min-height: 3rem;
   text-align: right;
   font-size: 1.2rem;
   font-weight: 600;
@@ -381,14 +401,20 @@ tbody tr:focus-visible {
 
 .btn-close,
 .btn-save {
-  background-color: var(--color-btn-close);
-  color: var(--color-text);
   border: none;
   border-radius: 0.3rem;
   padding: 0.7rem 2rem;
   font-size: 1.2rem;
   font-weight: bold;
   cursor: pointer;
+}
+.btn-close {
+  background-color: var(--color-btn-close);
+  color: var(--color-text);
+  box-shadow:
+    inset 0 1px 0 #555c75,
+    inset 0 -2px 0 #0003,
+    0 1px 2px #0006;
 }
 
 .btn-close:hover,
@@ -397,12 +423,17 @@ tbody tr:focus-visible {
 }
 
 .btn-close:active {
-  background-color: var(--color-btn-close-active);
+  translate: 0 1px;
+  box-shadow: inset 0 2px 4px #0004;
 }
 
 .btn-save {
-  background-color: var(--color-accent);
   color: var(--color-surface);
+  background-color: var(--color-accent);
+  box-shadow:
+    inset 0 1px 0 #ffffff59,
+    inset 0 -2px 0 #0003,
+    0 1px 2px #0006;
 }
 
 .btn-save:hover {
@@ -410,7 +441,8 @@ tbody tr:focus-visible {
 }
 
 .btn-save:active {
-  background-color: var(--color-btn-submit-active);
+  translate: 0 1px;
+  box-shadow: inset 0 2px 4px #0004;
 }
 
 @media (min-width: 640px) {
@@ -480,6 +512,12 @@ tbody tr:focus-visible {
   .table-buttons {
     gap: 2rem;
   }
+
+  #display-messages,
+  .modal-message {
+    font-size: 1.1rem;
+  }
+
   .plant-modal {
     border-width: 2px;
   }
@@ -504,10 +542,5 @@ tbody tr:focus-visible {
   .plant-details-row textarea {
     border-width: 2px;
     padding: 0.4rem;
-  }
-
-  .btn-close {
-    padding: 0.7rem 1.5rem;
-    font-size: 1.1rem;
   }
 }
