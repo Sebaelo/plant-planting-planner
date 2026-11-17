@@ -1,5 +1,6 @@
 import { months, displayMonth, displayMessage } from "./utils.js";
 import { getCategories } from "./api.js";
+import { editPlant } from "./plants.js";
 
 export const modal = document.querySelector("dialog");
 
@@ -74,7 +75,7 @@ export function plantDetailsModal(plant) {
   modal.showModal();
 }
 
-export async function plantEditModal(plant, onSave) {
+export async function plantEditModal(plant) {
   let categories;
 
   try {
@@ -165,7 +166,7 @@ export async function plantEditModal(plant, onSave) {
   modalButtons.classList.add("modal-buttons");
   modalButtons.append(saveBtn, closeBtn);
 
-  form.addEventListener("submit", (e) => onSave(e, plant.id));
+  form.addEventListener("submit", (e) => editPlant(e, plant.id));
 
   form.append(
     nameRow,

@@ -1,9 +1,17 @@
 import { displayMonth } from "./utils.js";
 import { plantDetailsModal, plantEditModal } from "./modals.js";
+import { handleDeletePlant } from "./plants.js";
 
 const tableBody = document.getElementById("table-body");
 
-function createPlantRow(plant, onDelete, onSave) {
+export function renderTable(plants) {
+  tableBody.replaceChildren();
+  plants.forEach((plant) => {
+    createPlantRow(plant);
+  });
+}
+
+function createPlantRow(plant) {
   const row = document.createElement("tr");
   row.tabIndex = 0;
 
@@ -32,7 +40,7 @@ function createPlantRow(plant, onDelete, onSave) {
 
   deleteBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    onDelete(plant.id);
+    handleDeletePlant(plant.id);
   });
 
   const editBtn = document.createElement("button");
@@ -48,7 +56,7 @@ function createPlantRow(plant, onDelete, onSave) {
 
   editBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-    plantEditModal(plant, onSave);
+    plantEditModal(plant);
   });
 
   const buttonWrapper = document.createElement("div");
@@ -80,11 +88,4 @@ function createPlantRow(plant, onDelete, onSave) {
   );
 
   tableBody.appendChild(row);
-}
-
-export function renderTable(plants, onDelete, onSave) {
-  tableBody.replaceChildren();
-  plants.forEach((plant) => {
-    createPlantRow(plant, onDelete, onSave);
-  });
 }

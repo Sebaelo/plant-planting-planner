@@ -11,7 +11,7 @@ export async function renderPlants() {
 
     const plants = query ? await searchPlants(query) : await getPlants();
 
-    renderTable(plants, handleDeletePlant, editPlant);
+    renderTable(plants);
   } catch (err) {
     console.error(err);
     displayMessage(
@@ -22,7 +22,7 @@ export async function renderPlants() {
 }
 searchInput.addEventListener("input", renderPlants);
 
-async function handleDeletePlant(id) {
+export async function handleDeletePlant(id) {
   try {
     await deletePlant(id);
 
@@ -36,7 +36,7 @@ async function handleDeletePlant(id) {
   }
 }
 
-async function editPlant(e, plantId) {
+export async function editPlant(e, plantId) {
   e.preventDefault();
 
   const formData = new FormData(e.target);
