@@ -50,3 +50,16 @@ export function validatePlant(plant) {
   }
   return null;
 }
+
+export function displayWhenToPlant(plantMonth) {
+  const currentMonth = new Date().getMonth() + 1;
+  const monthsLeft = (plantMonth - currentMonth + 12) % 12; // Clock arithmetic
+
+  if (monthsLeft === 0) {
+    return "plantera denna månaden";
+  }
+  if (monthsLeft === 1) {
+    return "plantera nästa månad";
+  }
+  return `plantera om ${monthsLeft} månader`;
+}
