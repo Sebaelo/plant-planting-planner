@@ -1,4 +1,9 @@
-import { months, displayMonth, displayMessage } from "./utils.js";
+import {
+  months,
+  displayMonth,
+  displayMessage,
+  displayWhenToPlant,
+} from "./utils.js";
 import { getCategories } from "./api.js";
 import { editPlant } from "./plants.js";
 
@@ -46,7 +51,7 @@ export function plantDetailsModal(plant) {
 
   const monthDetails = createDetailRow(
     "Månad",
-    displayMonth(plant.month_to_plant),
+    `${displayMonth(plant.month_to_plant)} (${displayWhenToPlant(plant.month_to_plant)})`,
   );
 
   const categoryDetails = createDetailRow("Kategori", plant.category);
